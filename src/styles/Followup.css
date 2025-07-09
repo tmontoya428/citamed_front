@@ -1,0 +1,46 @@
+.container-follow {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+    text-align: center;
+  }
+
+  .header-title {
+    margin-left: 10px; /* Separa "SEGUIMIENTO" del botón */
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  .botton-nav {
+    display: flex;
+    justify-content: flex-start; /* Alinea todo a la izquierda */
+    background-color: #5a67d8;
+    padding: 1rem 0;
+    padding-left: 1rem; /* Agrega espacio desde el borde izquierdo */
+  }
+  
+  .button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row; /* Flecha y texto en una línea */
+    align-items: center;
+    gap: 8px; /* Espacio entre la flecha y el texto */
+  }
+  
+  .button:hover {
+    background-color: #5a67d8;
+    transform: scale(1.05);
+  }
+  
+  .button:active {
+    transform: scale(0.95);
+  }
+  
+  .button:focus {
+    outline: none; /* Evita el borde verde al hacer clic */
+    box-shadow: none; /* Elimina el resplandor en algunos navegadores */
+  }

@@ -1,0 +1,91 @@
+/* Estilos generales */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor principal */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Centrado vertical */
+  width: 100vw;  /* Centrado horizontal */
+}
+
+/* Caja del login */
+.login-box {
+  width: 400px;
+  max-width: 90%;
+  background-color: #fff;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Título */
+.login-box h2 {
+  font-size: 24px;
+  color: #7f86d4;
+  margin-bottom: 20px;
+}
+
+/* Etiquetas */
+.login-box label {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Campos de entrada */
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Botón */
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #7f86d4;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-box button:hover {
+  background-color: #6d75be;
+}
+
+/* Links */
+.login-box p {
+  margin-top: 15px;
+  color: #888;
+}
+
+.login-box a {
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.login-box a:hover {
+  text-decoration: underline;
+}
