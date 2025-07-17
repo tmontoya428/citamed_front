@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaArrowLeft, FaInfoCircle, FaClock, FaTimes } from 'react-icons/fa';
 import '../styles/ReminderFrequency.css';
 import TimeTable from './TimeTable';
 
 function ReminderFrequency() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const formData = location.state || {};
+
   const [selectedFrequency, setSelectedFrequency] = useState(null);
   const [showTimeTable, setShowTimeTable] = useState(false);
   const [selectedTimes, setSelectedTimes] = useState([]);
 
   const handleBack = () => {
-    navigate('/reminder-medicine'); // ruta previa
+    navigate('/reminder-medicine');
   };
 
   const handleFrequencySelect = (frequency) => {
@@ -19,38 +22,44 @@ function ReminderFrequency() {
   };
 
   const handleTimeSelect = (times) => {
-    setSelectedTimes(times.sort((a, b) => {
-      const getHours = (time) => {
-        const [hour, period] = time.split(' ');
-        const [h] = hour.split(':');
-        let hours = parseInt(h);
-        if (period === 'PM' && hours !== 12) hours += 12;
-        if (period === 'AM' && hours === 12) hours = 0;
-        return hours;
-      };
-      return getHours(a) - getHours(b);
-    }));
+    setSelectedTimes(
+      times.sort((a, b) => {
+        const getHours = (time) => {
+          const [hour, period] = time.split(' ');
+          const [h] = hour.split(':');
+          let hours = parseInt(h);
+          if (period === 'PM' && hours !== 12) hours += 12;
+          if (period === 'AM' && hours === 12) hours = 0;
+          return hours;
+        };
+        return getHours(a) - getHours(b);
+      })
+    );
   };
 
   const removeTime = (timeToRemove) => {
-    setSelectedTimes(prev => prev.filter(time => time !== timeToRemove));
+    setSelectedTimes((prev) => prev.filter((time) => time !== timeToRemove));
   };
 
   const handleNext = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     const reminder = {
-      tipo: "medicamento",
-      frecuencia: selectedFrequency,
+      tipo: 'medicamento',
+      titulo: formData.titulo,
+      descripcion: formData.descripcion,
+      dosis: Number(formData.dosis),
+      unidad: formData.unidad,
+      cantidadDisponible: Number(formData.cantidadDisponible),
+      frecuencia: selectedFrequency.charAt(0).toUpperCase() + selectedFrequency.slice(1),
       horarios: selectedTimes,
-      // puedes incluir más campos si los traes de otro formulario
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/reminders", {
-        method: "POST",
+      const res = await fetch('http://localhost:5000/api/reminders', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(reminder),
@@ -59,13 +68,13 @@ function ReminderFrequency() {
       const data = await res.json();
 
       if (res.ok) {
-        navigate("/reminder-created");
+        navigate('/reminder-created');
       } else {
-        alert("❌ Error al guardar recordatorio: " + data.message);
+        alert('❌ Error al guardar recordatorio: ' + data.message);
       }
     } catch (error) {
-      console.error("🚨 Error al conectar con backend:", error);
-      alert("No se pudo conectar con el servidor.");
+      console.error('🚨 Error al conectar con backend:', error);
+      alert('No se pudo conectar con el servidor.');
     }
   };
 
@@ -81,26 +90,28 @@ function ReminderFrequency() {
       <div className="frequency-box">
         <div className="frequency-title-bar">
           <h2>Crear recordatorio de Medicamentos</h2>
-          <button className="reminder-close-btn" onClick={handleBack}>✕</button>
+          <button className="reminder-close-btn" onClick={handleBack}>
+            ✕
+          </button>
         </div>
 
         <div className="frequency-content">
           <h3>Selecciona la frecuencia del recordatorio</h3>
 
           <div className="frequency-options">
-            <button 
+            <button
               className={`frequency-btn ${selectedFrequency === 'diaria' ? 'selected' : ''}`}
               onClick={() => handleFrequencySelect('diaria')}
             >
               Diaria
             </button>
-            <button 
+            <button
               className={`frequency-btn ${selectedFrequency === 'semanal' ? 'selected' : ''}`}
               onClick={() => handleFrequencySelect('semanal')}
             >
               Semanal
             </button>
-            <button 
+            <button
               className={`frequency-btn ${selectedFrequency === 'personalizada' ? 'selected' : ''}`}
               onClick={() => handleFrequencySelect('personalizada')}
             >
@@ -112,10 +123,7 @@ function ReminderFrequency() {
             <FaInfoCircle /> Las notificaciones serán según los horarios establecidos.
           </p>
 
-          <button 
-            className="set-time-btn"
-            onClick={() => setShowTimeTable(true)}
-          >
+          <button className="set-time-btn" onClick={() => setShowTimeTable(true)}>
             Establecer horario
           </button>
 
@@ -128,7 +136,7 @@ function ReminderFrequency() {
                 {selectedTimes.map((time) => (
                   <div key={time} className="time-chip">
                     <span>{time}</span>
-                    <button 
+                    <button
                       className="remove-time-btn"
                       onClick={() => removeTime(time)}
                       title="Eliminar hora"
@@ -145,8 +153,8 @@ function ReminderFrequency() {
             <button className="back-btn" onClick={handleBack}>
               <FaArrowLeft /> Volver
             </button>
-            <button 
-              className="continue-btn" 
+            <button
+              className="continue-btn"
               onClick={handleNext}
               disabled={selectedTimes.length === 0 || !selectedFrequency}
             >
@@ -157,10 +165,7 @@ function ReminderFrequency() {
       </div>
 
       {showTimeTable && (
-        <TimeTable
-          onClose={() => setShowTimeTable(false)}
-          onConfirm={handleTimeSelect}
-        />
+        <TimeTable onClose={() => setShowTimeTable(false)} onConfirm={handleTimeSelect} />
       )}
     </>
   );
