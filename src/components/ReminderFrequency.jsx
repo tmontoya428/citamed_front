@@ -14,17 +14,12 @@ function ReminderFrequency() {
     navigate('/reminder-medicine'); // ruta previa
   };
 
-  const handleNext = () => {
-    navigate('/reminder-created'); // próxima ruta
-  };
-
   const handleFrequencySelect = (frequency) => {
     setSelectedFrequency(frequency);
   };
 
   const handleTimeSelect = (times) => {
     setSelectedTimes(times.sort((a, b) => {
-      // Convertir las horas a formato de 24 horas para ordenar
       const getHours = (time) => {
         const [hour, period] = time.split(' ');
         const [h] = hour.split(':');
@@ -39,6 +34,39 @@ function ReminderFrequency() {
 
   const removeTime = (timeToRemove) => {
     setSelectedTimes(prev => prev.filter(time => time !== timeToRemove));
+  };
+
+  const handleNext = async () => {
+    const token = localStorage.getItem("token");
+
+    const reminder = {
+      tipo: "medicamento",
+      frecuencia: selectedFrequency,
+      horarios: selectedTimes,
+      // puedes incluir más campos si los traes de otro formulario
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/api/reminders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(reminder),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        navigate("/reminder-created");
+      } else {
+        alert("❌ Error al guardar recordatorio: " + data.message);
+      }
+    } catch (error) {
+      console.error("🚨 Error al conectar con backend:", error);
+      alert("No se pudo conectar con el servidor.");
+    }
   };
 
   return (
@@ -120,7 +148,7 @@ function ReminderFrequency() {
             <button 
               className="continue-btn" 
               onClick={handleNext}
-              disabled={selectedTimes.length === 0}
+              disabled={selectedTimes.length === 0 || !selectedFrequency}
             >
               CONTINUAR &rsaquo;
             </button>

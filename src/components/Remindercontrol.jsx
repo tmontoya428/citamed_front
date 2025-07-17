@@ -8,22 +8,62 @@ const Remindercontrol = () => {
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [frecuencia, setFrecuencia] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const irAReminder = () => {
     navigate('/reminder');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ titulo, descripcion, frecuencia });
-    setTitulo('');
-    setDescripcion('');
-    setFrecuencia('');
+
+    if (!frecuencia) {
+      alert('Por favor selecciona una frecuencia');
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Debes iniciar sesión nuevamente.");
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    const reminder = { tipo: "control", titulo, descripcion, frecuencia };
+
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:5000/api/reminders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(reminder),
+      });
+
+      const data = await response.json();
+      setLoading(false);
+
+      if (response.ok) {
+        console.log("✅ Recordatorio creado:", data);
+        setTitulo('');
+        setDescripcion('');
+        setFrecuencia('');
+        navigate("/reminder-created");
+      } else {
+        console.error("❌ Error al guardar recordatorio:", data.message);
+        alert(`Hubo un problema al guardar: ${data.message}`);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error("🚨 Error en la conexión:", error);
+      alert("Error al conectar con el servidor.");
+    }
   };
 
   return (
     <>
-      {/* Navbar superior */}
       <nav className="bottom">
         <button className="nav-button" onClick={irAReminder}>
           <FaArrowLeft />
@@ -31,7 +71,6 @@ const Remindercontrol = () => {
         <h1>CITAMED</h1>
       </nav>
 
-      {/* Contenedor con scroll */}
       <main>
         <div className="remindercontrol-container">
           <div className="remindercontrol-banner">
@@ -39,34 +78,29 @@ const Remindercontrol = () => {
           </div>
 
           <form className="remindercontrol-form" onSubmit={handleSubmit}>
-            <label htmlFor="titulo" className="remindercontrol-label">Título</label>
+            <label className="remindercontrol-label">Título</label>
             <input
               type="text"
-              id="titulo"
               className="remindercontrol-input"
-              placeholder="Nombre del recordatorio"
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               required
             />
 
-            <label htmlFor="descripcion" className="remindercontrol-label">Descripción</label>
+            <label className="remindercontrol-label">Descripción</label>
             <textarea
-              id="descripcion"
               className="remindercontrol-textarea"
-              placeholder="Descripción del recordatorio"
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
               required
-            ></textarea>
+            />
 
-            <p className="remindercontrol-frecuencia-label">Selecciona la frecuencia del recordatorio</p>
-
+            <p className="remindercontrol-frecuencia-label">Frecuencia</p>
             <div className="remindercontrol-frecuencia-buttons">
               {['Diaria', 'Semanal', 'Personalizada'].map((freq) => (
                 <button
-                  key={freq}
                   type="button"
+                  key={freq}
                   className={`remindercontrol-frecuencia-btn ${frecuencia === freq ? 'selected' : ''}`}
                   onClick={() => setFrecuencia(freq)}
                 >
@@ -75,11 +109,15 @@ const Remindercontrol = () => {
               ))}
             </div>
 
-            <p className="remindercontrol-info">
-              <span>❗</span> Las notificaciones serán según los horarios establecidos
-            </p>
+            <p className="remindercontrol-info">❗ Las notificaciones serán según los horarios establecidos</p>
 
-            <button type="submit" className="remindercontrol-submit">Guardar</button>
+            <button
+              type="submit"
+              className="remindercontrol-submit"
+              disabled={loading}
+            >
+              {loading ? 'Guardando...' : 'Guardar'}
+            </button>
           </form>
         </div>
       </main>
