@@ -208,8 +208,7 @@ header {
   padding: 10px;
   background: #7f86d4;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-left: auto;
   border: none; /* Elimina cualquier borde */
   outline: none; /* Evita el contorno azul en algunos navegadores */
 }
