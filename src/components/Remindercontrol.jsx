@@ -90,8 +90,8 @@ const Remindercontrol = () => {
 
             <label className="remindercontrol-label">Fecha de control</label>
             <input
-              type="text"
-              className="remindercontrol-input"
+              type="date"
+              className="remindercontrol-fecha"
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
               required

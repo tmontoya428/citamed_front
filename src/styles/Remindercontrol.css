@@ -105,6 +105,17 @@
     border: 2px solid var(--border-color);
     border-radius: 6px;
   }
+
+  .remindercontrol-fecha {
+    padding: 0.8rem;
+    font-size: 1rem;
+    color: #000000;
+    width: 100%;
+    background-color:#00000038;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+
+  }
   
   .remindercontrol-textarea {
     min-height: 120px;
