@@ -8,6 +8,7 @@ function Register() {
         name: '',
         lastName: '',
         birthdate: '',
+        phone:'',
         email: '',
         username: '',
         password: ''
@@ -105,6 +106,16 @@ function Register() {
                             value={formData.birthdate}
                             onChange={handleChange}
                         />
+                    </div>
+                    <div  className='half-width'>
+                         <label htmlFor='phone'> Celular</label>
+                            <input
+                                type='phone'
+                                id='phone'
+                                name='phone'
+                                value={formData.Phone}
+                                onChange={handleChange}
+                                /> 
                     </div>
                     <div className="half-width">
                         <label htmlFor="email">Correo:</label>
