@@ -8,6 +8,7 @@ function Register() {
         name: '',
         lastName: '',
         birthdate: '',
+        phone: '',
         email: '',
         username: '',
         password: ''
@@ -32,7 +33,7 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.email || !formData.password || !formData.name || !formData.lastName) {
+        if (!formData.email || !formData.password || !formData.name || !formData.lastName || !formData.Phone) {
             setMessage('Por favor, completa todos los campos obligatorios');
             return;
         }
@@ -106,6 +107,18 @@ function Register() {
                             onChange={handleChange}
                         />
                     </div>
+
+                    <div  className='half-width'>
+                        <label htmlFor='phone'> Celular</label>
+                        <input
+                            type='phone'
+                            id='phone'
+                            name='phone'
+                            value={formData.Phone}
+                            onChange={handleChange}
+                        /> 
+                    </div>
+
                     <div className="half-width">
                         <label htmlFor="email">Correo:</label>
                         <input
