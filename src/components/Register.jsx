@@ -33,7 +33,7 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.email || !formData.password || !formData.name || !formData.lastName || !formData.Phone) {
+        if (!formData.email || !formData.password || !formData.name || !formData.lastName || !formData.phone) {
             setMessage('Por favor, completa todos los campos obligatorios');
             return;
         }
