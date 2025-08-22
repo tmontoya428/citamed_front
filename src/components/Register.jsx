@@ -9,6 +9,7 @@ function Register() {
         lastName: '',
         birthdate: '',
         phone: '',
+        phone:'',
         email: '',
         username: '',
         password: ''
@@ -108,6 +109,7 @@ function Register() {
                         />
                     </div>
 
+
                     <div  className='half-width'>
                         <label htmlFor='phone'> Celular</label>
                         <input
@@ -117,6 +119,18 @@ function Register() {
                             value={formData.Phone}
                             onChange={handleChange}
                         /> 
+                    </div>
+
+
+                    <div  className='half-width'>
+                         <label htmlFor='phone'> Celular</label>
+                            <input
+                                type='phone'
+                                id='phone'
+                                name='phone'
+                                value={formData.Phone}
+                                onChange={handleChange}
+                                /> 
                     </div>
 
                     <div className="half-width">
