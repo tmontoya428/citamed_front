@@ -4,24 +4,25 @@ import '../styles/TimeTable.css';
 function TimeTable({ onClose, onConfirm }) {
   const [selectedTimes, setSelectedTimes] = useState([]);
 
-  const amHours = Array.from({ length: 12 }, (_, i) => {
-    const hour = i === 0 ? 12 : i;
-    return `${hour}:00 AM`;
-  });
+  // Genera horas en formato 24h (00:00 → 23:55)
+  const generateTimes = () => {
+    const times = [];
+    for (let h = 0; h < 24; h++) {
+      for (let m = 0; m < 60; m += 5) {
+        const hour = h.toString().padStart(2, "0");
+        const minutes = m.toString().padStart(2, "0");
+        times.push(`${hour}:${minutes}`);
+      }
+    }
+    return times;
+  };
 
-  const pmHours = Array.from({ length: 12 }, (_, i) => {
-    const hour = i === 0 ? 12 : i;
-    return `${hour}:00 PM`;
-  });
+  const allTimes = generateTimes();
 
   const toggleTimeSelection = (time) => {
-    setSelectedTimes(prev => {
-      if (prev.includes(time)) {
-        return prev.filter(t => t !== time);
-      } else {
-        return [...prev, time];
-      }
-    });
+    setSelectedTimes((prev) =>
+      prev.includes(time) ? prev.filter((t) => t !== time) : [...prev, time]
+    );
   };
 
   const handleConfirm = () => {
@@ -33,48 +34,28 @@ function TimeTable({ onClose, onConfirm }) {
     <div className="time-table-overlay">
       <div className="time-table-container">
         <div className="time-table-header">
-          <h2>Seleccionar Horarios</h2>
+          <h2>Seleccionar Horarios (24h)</h2>
           <button className="time-table-close" onClick={onClose}>✕</button>
         </div>
 
-        <div className="time-periods">
-          <div className="period-column">
-            <div className="period-title">AM</div>
-            <div className="time-slots">
-              {amHours.map((time) => (
-                <div
-                  key={time}
-                  className={`time-slot ${selectedTimes.includes(time) ? 'selected' : ''}`}
-                  onClick={() => toggleTimeSelection(time)}
-                >
-                  {time}
-                </div>
-              ))}
+        <div className="time-slots">
+          {allTimes.map((time) => (
+            <div
+              key={time}
+              className={`time-slot ${selectedTimes.includes(time) ? "selected" : ""}`}
+              onClick={() => toggleTimeSelection(time)}
+            >
+              {time}
             </div>
-          </div>
-
-          <div className="period-column">
-            <div className="period-title">PM</div>
-            <div className="time-slots">
-              {pmHours.map((time) => (
-                <div
-                  key={time}
-                  className={`time-slot ${selectedTimes.includes(time) ? 'selected' : ''}`}
-                  onClick={() => toggleTimeSelection(time)}
-                >
-                  {time}
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className="time-table-actions">
           <button className="time-table-cancel" onClick={onClose}>
             Cancelar
           </button>
-          <button 
-            className="time-table-confirm" 
+          <button
+            className="time-table-confirm"
             onClick={handleConfirm}
             disabled={selectedTimes.length === 0}
           >
@@ -86,4 +67,4 @@ function TimeTable({ onClose, onConfirm }) {
   );
 }
 
-export default TimeTable; 
+export default TimeTable;
