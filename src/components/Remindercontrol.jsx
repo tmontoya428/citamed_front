@@ -6,6 +6,7 @@ import '../styles/Remindercontrol.css';
 const Remindercontrol = () => {
   const navigate = useNavigate();
   const [titulo, setTitulo] = useState('');
+  const [fecha, setFecha] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [frecuencia, setFrecuencia] = useState('');
   const [loading, setLoading] = useState(false);
@@ -84,6 +85,15 @@ const Remindercontrol = () => {
               className="remindercontrol-input"
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
+              required
+            />
+
+            <label className="remindercontrol-label">Fecha de control</label>
+            <input
+              type="text"
+              className="remindercontrol-input"
+              value={fecha}
+              onChange={(e) => setFecha(e.target.value)}
               required
             />
 
