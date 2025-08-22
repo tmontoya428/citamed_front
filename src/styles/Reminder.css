@@ -129,3 +129,15 @@
   outline: none; /* Evita el borde verde al hacer clic */
   box-shadow: none; /* Elimina el resplandor en algunos navegadores */
 }
+.delete-button {
+  background: red;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: darkred;
+}

@@ -1,16 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/Reminder.css";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaCalendarAlt, FaHistory, FaPlus, FaUsers, FaPills, FaTimes } from "react-icons/fa";
+import { 
+  FaArrowLeft, 
+  FaCalendarAlt, 
+  FaHistory, 
+  FaPlus, 
+  FaUsers, 
+  FaPills, 
+  FaTimes, 
+  FaTrash 
+} from "react-icons/fa";
+import axios from "axios";
 
 const Reminder = () => {
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
+  const [reminders, setReminders] = useState([]);
 
   const toggleOptions = () => setShowOptions(!showOptions);
-  const irARecordatorio = () => {
-    navigate('/create-reminder');
+  const irARecordatorio = () => navigate("/create-reminder");
 
+  // 👉 Traer recordatorios desde backend
+  useEffect(() => {
+    fetchReminders();
+  }, []);
+
+  const fetchReminders = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/reminders", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setReminders(res.data);
+    } catch (error) {
+      console.error("❌ Error al traer recordatorios:", error);
+    }
+  };
+
+  // 👉 Eliminar recordatorio
+  const eliminarRecordatorio = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/reminders/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setReminders(reminders.filter((r) => r._id !== id));
+    } catch (error) {
+      console.error("❌ Error al eliminar recordatorio:", error);
+    }
   };
 
   return (
@@ -18,7 +56,33 @@ const Reminder = () => {
 
       {/* Contenido principal */}
       <main className="main-content">
-        <p className="no-data">No data to display</p>
+        {reminders.length === 0 ? (
+          <p className="no-data">No hay recordatorios</p>
+        ) : (
+          <ul className="reminder-list">
+            {reminders.map((reminder) => (
+              <li key={reminder._id} className="reminder-item">
+                <div className="reminder-info">
+                  <h3>{reminder.titulo}</h3>
+                  <p>{reminder.descripcion}</p>
+                  <small><b>Frecuencia:</b> {reminder.frecuencia}</small><br />
+                  {reminder.hora && <small><b>Hora:</b> {reminder.hora}</small>}<br />
+                  {reminder.dosis && reminder.unidad && (
+                    <small>
+                      <b>Dosis:</b> {reminder.dosis} {reminder.unidad}
+                    </small>
+                  )}
+                </div>
+                <button 
+                  className="delete-button" 
+                  onClick={() => eliminarRecordatorio(reminder._id)}
+                >
+                  <FaTrash />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </main>
 
       {/* Botón flotante con opciones */}
@@ -28,9 +92,9 @@ const Reminder = () => {
             <button className="fab-option" onClick={irARecordatorio}>
               <FaUsers /> Recordatorio de control
             </button>
-      <button className="fab-option" onClick={() => navigate('/reminder-medicine')}>
-          <FaPills /> Recordatorio de medicamentos
-      </button>
+            <button className="fab-option" onClick={() => navigate("/reminder-medicine")}>
+              <FaPills /> Recordatorio de medicamentos
+            </button>
           </div>
         )}
         <button className="fab-main" onClick={toggleOptions}>
@@ -40,7 +104,7 @@ const Reminder = () => {
 
       {/* Barra inferior */}
       <nav className="bottom-nav">
-      <button className="back-button" onClick={() => navigate("/home")}>
+        <button className="back-button" onClick={() => navigate("/home")}>
           <FaArrowLeft />
         </button>
         <h1>RECORDATORIOS</h1>
