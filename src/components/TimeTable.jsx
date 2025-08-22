@@ -15,9 +15,9 @@ function TimeTable({ onClose, onConfirm }) {
   });
 
   const toggleTimeSelection = (time) => {
-    setSelectedTimes(prev => {
+    setSelectedTimes((prev) => {
       if (prev.includes(time)) {
-        return prev.filter(t => t !== time);
+        return prev.filter((t) => t !== time);
       } else {
         return [...prev, time];
       }
@@ -25,23 +25,8 @@ function TimeTable({ onClose, onConfirm }) {
   };
 
   const handleConfirm = () => {
-    if (time) {
-      // 🔹 Convierte la hora de 24h → 12h con AM/PM
-      const [hours, minutes] = time.split(":");
-      let hour = parseInt(hours, 10);
-      let period = "AM";
-
-      if (hour >= 12) {
-        period = "PM";
-        if (hour > 12) hour -= 12;
-      } else if (hour === 0) {
-        hour = 12;
-      }
-
-      const formattedTime = `${hour}:${minutes} ${period}`;
-
-      // 🔹 Devuelve al padre un array (para que encaje con ReminderFrequency)
-      onConfirm([formattedTime]);
+    if (selectedTimes.length > 0) {
+      onConfirm(selectedTimes); // ✅ Devuelve todos los horarios seleccionados
       onClose();
     }
   };
@@ -93,7 +78,7 @@ function TimeTable({ onClose, onConfirm }) {
           <button
             className="time-table-confirm"
             onClick={handleConfirm}
-            disabled={!time}
+            disabled={selectedTimes.length === 0} // ✅ Bloquea si no hay selección
           >
             Confirmar
           </button>

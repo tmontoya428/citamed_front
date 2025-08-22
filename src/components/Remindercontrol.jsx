@@ -24,13 +24,23 @@ const Remindercontrol = () => {
     }
 
     const token = localStorage.getItem("token");
+    const email = localStorage.getItem("userEmail"); // 👈 asegúrate de guardarlo al iniciar sesión
+
     if (!token) {
       alert("Debes iniciar sesión nuevamente.");
       navigate("/login", { replace: true });
       return;
     }
 
-    const reminder = { tipo: "control", titulo, descripcion, frecuencia };
+    // 👇 Ahora incluimos fecha y email
+    const reminder = { 
+      tipo: "control", 
+      titulo, 
+      descripcion, 
+      frecuencia, 
+      fecha, 
+      email 
+    };
 
     try {
       setLoading(true);
@@ -47,10 +57,11 @@ const Remindercontrol = () => {
       setLoading(false);
 
       if (response.ok) {
-        console.log("✅ Recordatorio creado:", data);
+        console.log("✅ Recordatorio de control creado:", data);
         setTitulo('');
         setDescripcion('');
         setFrecuencia('');
+        setFecha('');
         navigate("/reminder-created");
       } else {
         console.error("❌ Error al guardar recordatorio:", data.message);
