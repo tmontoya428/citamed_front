@@ -12,6 +12,7 @@ function ReminderFrequency() {
   const [selectedFrequency, setSelectedFrequency] = useState(null);
   const [showTimeTable, setShowTimeTable] = useState(false);
   const [selectedTimes, setSelectedTimes] = useState([]);
+  const [recommendedInterval, setRecommendedInterval] = useState(null);
 
   const handleBack = () => {
     navigate('/reminder-medicine');
@@ -19,6 +20,7 @@ function ReminderFrequency() {
 
   const handleFrequencySelect = (frequency) => {
     setSelectedFrequency(frequency);
+    setRecommendedInterval(null); // Reinicia al cambiar
   };
 
   const handleTimeSelect = (times) => {
@@ -52,6 +54,7 @@ function ReminderFrequency() {
       unidad: formData.unidad,
       cantidadDisponible: Number(formData.cantidadDisponible),
       frecuencia: selectedFrequency.charAt(0).toUpperCase() + selectedFrequency.slice(1),
+      intervalo: recommendedInterval ? `${recommendedInterval} horas` : null,
       horarios: selectedTimes,
     };
 
@@ -118,6 +121,24 @@ function ReminderFrequency() {
               Personalizada
             </button>
           </div>
+
+          {/* ⚡️ Aquí aparece el letrero cuando selecciona "diaria" */}
+          {selectedFrequency === 'personalizada' && (
+            <div className="recommended-box">
+              <p><FaInfoCircle /> Selecciona cada cuántas horas recomienda el doctor:</p>
+              <div className="interval-options">
+                {[4, 6, 8, 12, 24].map((hrs) => (
+                  <button
+                    key={hrs}
+                    className={`interval-btn ${recommendedInterval === hrs ? 'selected' : ''}`}
+                    onClick={() => setRecommendedInterval(hrs)}
+                  >
+                    Cada {hrs} horas
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <p className="frequency-note">
             <FaInfoCircle /> Las notificaciones serán según los horarios establecidos.
