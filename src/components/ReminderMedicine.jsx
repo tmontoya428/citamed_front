@@ -10,34 +10,27 @@ function ReminderMedicine() {
   const [dosis, setDosis] = useState('');
   const [unidad, setUnidad] = useState('Unidades');
   const [cantidadDisponible, setCantidadDisponible] = useState('');
-  const [fecha, setFecha] = useState(''); // ✅ Nuevo estado para la fecha
+  const [fecha, setFecha] = useState(''); // fecha del recordatorio
 
-  const handleBack = () => {
-    navigate('/reminder');
-  };
+  const handleBack = () => navigate('/reminder');
 
   const handleNext = (e) => {
     e.preventDefault();
-
-   const formData = {
-  titulo,
-  descripcion,
-  dosis,
-  unidad,
-  cantidadDisponible,
-  fecha: fecha ? new Date(fecha + 'T00:00:00') : new Date(), // ✅ convierte a Date
-};
-
-
+    const formData = {
+      titulo,
+      descripcion,
+      dosis,
+      unidad,
+      cantidadDisponible,
+      fecha: fecha ? new Date(fecha + 'T00:00:00') : new Date(),
+    };
     navigate("/reminder-frequency", { state: formData });
   };
 
   return (
     <>
       <nav className="bottom">
-        <button className="nav-button" onClick={handleBack}>
-          <FaArrowLeft />
-        </button>
+        <button className="nav-button" onClick={handleBack}><FaArrowLeft /></button>
         <h1>CITAMED</h1>
       </nav>
 
@@ -49,35 +42,16 @@ function ReminderMedicine() {
 
         <form className="reminder-form" onSubmit={handleNext}>
           <label className="reminder-label">Medicamento</label>
-          <input
-            type="text"
-            className="reminder-input"
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            required
-          />
+          <input type="text" className="reminder-input" value={titulo} onChange={(e)=>setTitulo(e.target.value)} required />
 
           <label className="reminder-label">Descripción</label>
-          <textarea
-            className="reminder-textarea"
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-            required
-          ></textarea>
+          <textarea className="reminder-textarea" value={descripcion} onChange={(e)=>setDescripcion(e.target.value)} required />
 
-          <p className="reminder-note">
-            <FaInfoCircle /> Este texto se mostrará en la notificación.
-          </p>
+          <p className="reminder-note"><FaInfoCircle /> Este texto se mostrará en la notificación.</p>
 
           <div className="reminder-row">
             <label>Dosis a tomar:</label>
-            <input
-              type="number"
-              className="reminder-small-input"
-              value={dosis}
-              onChange={(e) => setDosis(e.target.value)}
-              required
-            />
+            <input type="number" className="reminder-small-input" value={dosis} onChange={(e)=>setDosis(e.target.value)} required />
           </div>
 
           <div className="reminder-row">
@@ -87,34 +61,17 @@ function ReminderMedicine() {
 
           <div className="reminder-row">
             <label>Cantidad disponible:</label>
-            <input
-              type="number"
-              className="reminder-small-input"
-              value={cantidadDisponible}
-              onChange={(e) => setCantidadDisponible(e.target.value)}
-              required
-            /> Unidades
+            <input type="number" className="reminder-small-input" value={cantidadDisponible} onChange={(e)=>setCantidadDisponible(e.target.value)} required /> Unidades
           </div>
 
-          <p className="reminder-note">
-            <FaInfoCircle /> Unidades disponibles del medicamento
-          </p>
+          <p className="reminder-note"><FaInfoCircle /> Unidades disponibles del medicamento</p>
 
-          {/* ✅ Nuevo campo de fecha */}
           <div className="reminder-row">
             <label>Fecha del recordatorio:</label>
-            <input
-             type="date"
-              className="reminder-input"
-              value={fecha}
-              onChange={(e) => setFecha(e.target.value)}
-              required
-/>
+            <input type="date" className="reminder-input" value={fecha} onChange={(e)=>setFecha(e.target.value)} required />
           </div>
 
-          <button type="submit" className="reminder-submit-btn">
-            Continuar
-          </button>
+          <button type="submit" className="reminder-submit-btn">Continuar</button>
         </form>
       </div>
     </>

@@ -13,33 +13,16 @@ function ReminderFrequency() {
   const [showTimeTable, setShowTimeTable] = useState(false);
   const [selectedTimes, setSelectedTimes] = useState([]);
 
-  const handleBack = () => {
-    navigate('/reminder-medicine');
+  const handleBack = () => navigate('/reminder-medicine');
+
+  const handleFrequencySelect = freq => setSelectedFrequency(freq);
+
+  const handleTimeSelect = timesArray => {
+    if (!Array.isArray(timesArray)) timesArray = [timesArray];
+    setSelectedTimes(timesArray); // sin sort, mantiene lo que escribió el usuario
   };
 
-  const handleFrequencySelect = (frequency) => {
-    setSelectedFrequency(frequency);
-  };
-
-  const handleTimeSelect = (times) => {
-    setSelectedTimes(
-      times.sort((a, b) => {
-        const getHours = (time) => {
-          const [hour, period] = time.split(' ');
-          const [h] = hour.split(':');
-          let hours = parseInt(h);
-          if (period === 'PM' && hours !== 12) hours += 12;
-          if (period === 'AM' && hours === 12) hours = 0;
-          return hours;
-        };
-        return getHours(a) - getHours(b);
-      })
-    );
-  };
-
-  const removeTime = (timeToRemove) => {
-    setSelectedTimes((prev) => prev.filter((time) => time !== timeToRemove));
-  };
+  const removeTime = timeToRemove => setSelectedTimes(prev => prev.filter(t => t !== timeToRemove));
 
   const handleNext = async () => {
     const token = localStorage.getItem('token');
@@ -51,6 +34,7 @@ function ReminderFrequency() {
       dosis: Number(formData.dosis),
       unidad: formData.unidad,
       cantidadDisponible: Number(formData.cantidadDisponible),
+      fecha: formData.fecha, // fecha tomada de ReminderMedicine
       frecuencia: selectedFrequency.charAt(0).toUpperCase() + selectedFrequency.slice(1),
       horarios: selectedTimes,
     };
@@ -58,20 +42,13 @@ function ReminderFrequency() {
     try {
       const res = await fetch('http://localhost:5000/api/reminders', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(reminder),
       });
 
       const data = await res.json();
-
-      if (res.ok) {
-        navigate('/reminder-created');
-      } else {
-        alert('❌ Error al guardar recordatorio: ' + data.message);
-      }
+      if (res.ok) navigate('/reminder-created');
+      else alert('❌ Error al guardar recordatorio: ' + data.message);
     } catch (error) {
       console.error('🚨 Error al conectar con backend:', error);
       alert('No se pudo conectar con el servidor.');
@@ -81,68 +58,39 @@ function ReminderFrequency() {
   return (
     <>
       <nav className="bottom">
-        <button className="nav-button" onClick={handleBack}>
-          <FaArrowLeft />
-        </button>
+        <button className="nav-button" onClick={handleBack}><FaArrowLeft /></button>
         <h1>CITAMED</h1>
       </nav>
 
       <div className="frequency-box">
         <div className="frequency-title-bar">
           <h2>Crear recordatorio de Medicamentos</h2>
-          <button className="reminder-close-btn" onClick={handleBack}>
-            ✕
-          </button>
+          <button className="reminder-close-btn" onClick={handleBack}>✕</button>
         </div>
 
         <div className="frequency-content">
           <h3>Selecciona la frecuencia del recordatorio</h3>
 
           <div className="frequency-options">
-            <button
-              className={`frequency-btn ${selectedFrequency === 'diaria' ? 'selected' : ''}`}
-              onClick={() => handleFrequencySelect('diaria')}
-            >
-              Diaria
-            </button>
-            <button
-              className={`frequency-btn ${selectedFrequency === 'semanal' ? 'selected' : ''}`}
-              onClick={() => handleFrequencySelect('semanal')}
-            >
-              Semanal
-            </button>
-            <button
-              className={`frequency-btn ${selectedFrequency === 'personalizada' ? 'selected' : ''}`}
-              onClick={() => handleFrequencySelect('personalizada')}
-            >
-              Personalizada
-            </button>
+            {['diaria','semanal','personalizada'].map(freq => (
+              <button key={freq} className={`frequency-btn ${selectedFrequency === freq ? 'selected' : ''}`} onClick={()=>handleFrequencySelect(freq)}>
+                {freq.charAt(0).toUpperCase() + freq.slice(1)}
+              </button>
+            ))}
           </div>
 
-          <p className="frequency-note">
-            <FaInfoCircle /> Las notificaciones serán según los horarios establecidos.
-          </p>
+          <p className="frequency-note"><FaInfoCircle /> Las notificaciones serán según los horarios establecidos.</p>
 
-          <button className="set-time-btn" onClick={() => setShowTimeTable(true)}>
-            Establecer horario
-          </button>
+          <button className="set-time-btn" onClick={()=>setShowTimeTable(true)}>Establecer horario</button>
 
           {selectedTimes.length > 0 && (
             <div className="selected-times">
-              <div className="selected-times-header">
-                <FaClock /> Horarios seleccionados:
-              </div>
+              <div className="selected-times-header"><FaClock /> Horarios seleccionados:</div>
               <div className="selected-times-list">
-                {selectedTimes.map((time) => (
+                {selectedTimes.map(time => (
                   <div key={time} className="time-chip">
                     <span>{time}</span>
-                    <button
-                      className="remove-time-btn"
-                      onClick={() => removeTime(time)}
-                      title="Eliminar hora"
-                    >
-                      <FaTimes />
-                    </button>
+                    <button className="remove-time-btn" onClick={()=>removeTime(time)} title="Eliminar hora"><FaTimes /></button>
                   </div>
                 ))}
               </div>
@@ -150,23 +98,13 @@ function ReminderFrequency() {
           )}
 
           <div className="frequency-nav">
-            <button className="back-btn" onClick={handleBack}>
-              <FaArrowLeft /> Volver
-            </button>
-            <button
-              className="continue-btn"
-              onClick={handleNext}
-              disabled={selectedTimes.length === 0 || !selectedFrequency}
-            >
-              CONTINUAR &rsaquo;
-            </button>
+            <button className="back-btn" onClick={handleBack}><FaArrowLeft /> Volver</button>
+            <button className="continue-btn" onClick={handleNext} disabled={selectedTimes.length===0 || !selectedFrequency}>CONTINUAR &rsaquo;</button>
           </div>
         </div>
       </div>
 
-      {showTimeTable && (
-        <TimeTable onClose={() => setShowTimeTable(false)} onConfirm={handleTimeSelect} />
-      )}
+      {showTimeTable && <TimeTable onClose={()=>setShowTimeTable(false)} onConfirm={handleTimeSelect} />}
     </>
   );
 }
