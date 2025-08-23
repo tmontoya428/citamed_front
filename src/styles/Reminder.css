@@ -1,11 +1,25 @@
 /* Reminder.css */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
 .container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  justify-content: space-between;
-  text-align: center;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
 }
 
 .back-button {
@@ -13,25 +27,247 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: white;
 }
 
+/* Contenido principal  tarjeta principal de recordatorio de med*/
 .main-content {
-  flex-grow: 1;
+  flex: 1;
+  padding: 40px 20px 30px 20px;
+  overflow-y: auto;
+  margin-top: 80px; /* Espacio para el header */
+  padding-bottom: 120px; /* Espacio para el botón flotante */
+}
+
+.no-data {
+  text-align: center;
+  color: #666;
+  font-size: 1.2rem;
+  margin: 20px 0;
+}
+
+/* Lista de recordatorios */
+.reminder-list {
+  list-style: none;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+/* Item individual del recordatorio */
+.reminder-item {
+  background: #f8f9fa;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+}
+
+.reminder-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Header del recordatorio */
+.reminder-header {
+  background-color: #6c757d;
+  padding: 15px 30px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.reminder-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  text-align: left;
+}
+
+/* Contenido principal del recordatorio */
+.reminder-content {
+  background-color: #ffffff;
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-height: 100px;
+}
+
+/* Columna de iconos */
+.reminder-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pill-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #8da9e0;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  color: gray;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.pill-icon.capsule {
+  border-radius: 16px;
+}
+
+.pill-icon.tablet {
+  border-radius: 50%;
+  position: relative;
+}
+
+.pill-icon.tablet::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background-color: white;
+  transform: rotate(45deg);
+}
+
+/* Columna de información del medicamento */
+.reminder-info {
+  flex: 1;
+  text-align: left;
+}
+
+.medication-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.medication-instruction {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0 0 8px 0;
+}
+
+.medication-quantity {
+  font-size: 1rem;
+  color: #555;
+  margin: 0 0 12px 0;
+}
+
+.medication-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  color: #555;
+  margin: 0;
+}
+
+.time-icon {
+  font-size: 16px;
+  color: #6c757d;
+}
+
+/* Columna de confirmación */
+.reminder-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.confirmation-question {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  width: 56px;
+  height: 30px;
+  background-color: #4caf50;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.off {
+  background-color: #ccc;
+}
+
+.toggle-switch.off::after {
+  transform: translateX(-26px);
+}
+
+/* Botón de eliminar */
+.delete-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #dc3545;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  opacity: 0.8;
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.delete-button:hover {
+  opacity: 1;
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+/* FAB Container */
 .fab-container {
   position: fixed;
-  bottom: 30px; /* distancia desde la parte inferior */
-  left: 50%;    /* lo centra horizontalmente */
+  bottom: 40px;
+  left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
-  align-items: center; /* centra las opciones también */
+  align-items: center;
   z-index: 1000;
 }
 
@@ -40,104 +276,163 @@
   color: white;
   border: none;
   border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  font-size: 32px; /* puedes ajustar el tamaño */
+  width: 64px;
+  height: 64px;
+  font-size: 30px;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
-  /*Elimina el espacio raro por fuente */
+  box-shadow: 0 6px 16px rgba(92, 124, 250, 0.4);
+  transition: all 0.3s ease;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /*Elimina el espacio raro por fuente */
   line-height: 1;
   padding: 0;
 }
 
+.fab-main:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(92, 124, 250, 0.6);
+}
 
 .fab-options {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-bottom: 15px;
 }
 
 .fab-option {
   background-color: #5c7cfa;
   color: white;
   border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
+  border-radius: 25px;
+  padding: 12px 20px;
   font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+  transition: all 0.3s;
+  white-space: nowrap;
 }
 
-/* Estos son los colores al pasar el mouse sobre el botón */
-.fab-option:hover,
-.fab-option:focus,
-.fab-option:active {
-  background-color: #002fe9 !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
+.fab-option:hover {
+  background-color: #4c6ef5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(92, 124, 250, 0.4);
 }
 
-.fab-main:hover,
-.fab-main:focus,
-.fab-main:active {
-  background-color: #002fe9 !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-
+/* Bottom Navigation */
 .bottom-nav {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   background-color: #5a67d8;
-  padding: 1rem 0;
+  padding: 1rem 20px;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 80px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.bottom-nav h1 {
+  color: white !important;
+  font-size: 1.5rem !important;
+  margin: 0 !important;
+  margin-left: 20px !important;
+  flex: 1;
+  text-align: left;
+  font-weight: bold;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .nav-button {
   background: none;
   border: none;
   color: white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  gap: 5px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+  margin-left: 20px;
 }
 
 .nav-button:hover {
-  background-color: #5a67d8;
-  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.nav-button:active {
-  transform: scale(0.95);
+.nav-button svg {
+  font-size: 1.2rem;
 }
 
-.nav-button:focus {
-  outline: none; /* Evita el borde verde al hacer clic */
-  box-shadow: none; /* Elimina el resplandor en algunos navegadores */
-}
-.delete-button {
-  background: red;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  padding: 8px;
-  cursor: pointer;
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 20px 15px;
+    margin-top: 70px;
+    padding-bottom: 100px;
+  }
+  
+  .reminder-content {
+    padding: 20px 15px;
+    gap: 15px;
+  }
+  
+  .medication-name {
+    font-size: 1.2rem;
+  }
+  
+  .fab-main {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+  
+  .bottom-nav {
+    padding: 0.8rem 15px;
+    height: 70px;
+  }
+  
+  .bottom-nav h1 {
+    font-size: 1.2rem;
+    margin-left: 15px;
+  }
+  
+  .nav-button {
+    margin-left: 15px;
+    font-size: 0.8rem;
+  }
 }
 
-.delete-button:hover {
-  background: darkred;
+@media (max-width: 480px) {
+  .reminder-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .reminder-confirmation {
+    align-items: center;
+  }
+  
+  .nav-button {
+    font-size: 0.7rem;
+    margin-left: 10px;
+  }
+  
+  .bottom-nav h1 {
+    font-size: 1.1rem;
+    margin-left: 10px;
+  }
 }
