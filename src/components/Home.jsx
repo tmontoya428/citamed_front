@@ -44,40 +44,20 @@ const Home = () => {
     fetchReminders();
   }, []);
 
-  // 🔎 Helpers para comparar SOLO la fecha (YYYY-MM-DD), ignorando horas/zona
-  const toISODate = (date) => {
-    // Normaliza a medianoche local y luego toma la parte de fecha
-    const localMidnight = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
+  // 🔎 Comparar solo fecha local (ignora horas y zona horaria)
+  const isSameLocalDate = (date1, date2) => {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
     );
-    return localMidnight.toISOString().slice(0, 10); // "YYYY-MM-DD"
   };
 
-  const getReminderISODate = (rem) => {
-    // Soporta tanto "fecha" (correcto) como "Fecha" (por si quedaron registros viejos)
-    const raw = rem.fecha || rem.Fecha;
-    if (!raw) return null;
-
-    // raw suele venir como string ISO de Mongo. Tomamos solo "YYYY-MM-DD".
-    if (typeof raw === "string") {
-      // Si ya es ISO, esto funciona; si viniera en otro formato, caemos al new Date(...)
-      if (raw.length >= 10) return raw.slice(0, 10);
-      const d = new Date(raw);
-      return isNaN(d) ? null : d.toISOString().slice(0, 10);
-    } else {
-      // Si viniera como Date
-      const d = new Date(raw);
-      return isNaN(d) ? null : d.toISOString().slice(0, 10);
-    }
-  };
-
-  // 📌 Filtrar recordatorios por fecha seleccionada (comparación por YYYY-MM-DD)
-  const selectedISO = toISODate(selectedDate);
+  // 📌 Filtrar recordatorios por fecha seleccionada
   const filteredReminders = reminders.filter((rem) => {
-    const remISO = getReminderISODate(rem);
-    return remISO === selectedISO;
+    const remDate = rem.fecha ? new Date(rem.fecha) : null;
+    if (!remDate) return false;
+    return isSameLocalDate(remDate, selectedDate);
   });
 
   // 🔑 Cerrar sesión
