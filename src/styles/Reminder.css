@@ -141,3 +141,44 @@
 .delete-button:hover {
   background: darkred;
 }
+
+
+
+.reminder-list {
+  display: flex;
+  flex-wrap: wrap; /* Permite que salten de línea si no caben */
+  gap: 20px; /* Espacio entre tarjetas */
+  justify-content: flex-start; /* Alinea a la izquierda */
+  padding: 20px;
+  list-style: none;
+}
+
+.reminder-item {
+  display: flex;
+  flex-direction: column; /* Info arriba, botón abajo */
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 250px; /* Ancho mínimo de cada tarjeta */
+  max-width: 300px; /* Opcional: limitar ancho */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.reminder-info h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.reminder-info p {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.delete-button {
+  align-self: flex-end; /* botón alineado a la derecha */
+}

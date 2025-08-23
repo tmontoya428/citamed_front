@@ -12,17 +12,22 @@ function ReminderFrequency() {
   const [selectedFrequency, setSelectedFrequency] = useState(null);
   const [showTimeTable, setShowTimeTable] = useState(false);
   const [selectedTimes, setSelectedTimes] = useState([]);
+  const [customInterval, setCustomInterval] = useState('');
 
   const handleBack = () => navigate('/reminder-medicine');
 
-  const handleFrequencySelect = freq => setSelectedFrequency(freq);
+  const handleFrequencySelect = freq => {
+    setSelectedFrequency(freq);
+    setCustomInterval('');
+  };
 
   const handleTimeSelect = timesArray => {
     if (!Array.isArray(timesArray)) timesArray = [timesArray];
-    setSelectedTimes(timesArray); // sin sort, mantiene lo que escribió el usuario
+    setSelectedTimes(timesArray);
   };
 
-  const removeTime = timeToRemove => setSelectedTimes(prev => prev.filter(t => t !== timeToRemove));
+  const removeTime = timeToRemove =>
+    setSelectedTimes(prev => prev.filter(t => t !== timeToRemove));
 
   const handleNext = async () => {
     const token = localStorage.getItem('token');
@@ -34,9 +39,10 @@ function ReminderFrequency() {
       dosis: Number(formData.dosis),
       unidad: formData.unidad,
       cantidadDisponible: Number(formData.cantidadDisponible),
-      fecha: formData.fecha, // fecha tomada de ReminderMedicine
+      fecha: formData.fecha,
       frecuencia: selectedFrequency.charAt(0).toUpperCase() + selectedFrequency.slice(1),
       horarios: selectedTimes,
+      intervaloPersonalizado: selectedFrequency === 'personalizada' ? customInterval : null
     };
 
     try {
@@ -73,15 +79,31 @@ function ReminderFrequency() {
 
           <div className="frequency-options">
             {['diaria','semanal','personalizada'].map(freq => (
-              <button key={freq} className={`frequency-btn ${selectedFrequency === freq ? 'selected' : ''}`} onClick={()=>handleFrequencySelect(freq)}>
+              <button
+                key={freq}
+                className={`frequency-btn ${selectedFrequency === freq ? 'selected' : ''}`}
+                onClick={()=>handleFrequencySelect(freq)}
+              >
                 {freq.charAt(0).toUpperCase() + freq.slice(1)}
               </button>
             ))}
           </div>
 
-          <p className="frequency-note"><FaInfoCircle /> Las notificaciones serán según los horarios establecidos.</p>
+          {selectedFrequency === 'personalizada' && (
+            <div className="custom-interval">
+              <label>Intervalo personalizado:</label>
+              <select value={customInterval} onChange={e => setCustomInterval(e.target.value)}>
+                <option value="">--Seleccionar--</option>
+                <option value="2min">Cada 2 minutos</option>
+                <option value="2h">Cada 2 horas</option>
+              </select>
+              <p><FaInfoCircle /> Se usará la hora de inicio del recordatorio como primer envío.</p>
+            </div>
+          )}
 
-          <button className="set-time-btn" onClick={()=>setShowTimeTable(true)}>Establecer horario</button>
+          {selectedFrequency !== 'personalizada' && (
+            <button className="set-time-btn" onClick={()=>setShowTimeTable(true)}>Establecer horario</button>
+          )}
 
           {selectedTimes.length > 0 && (
             <div className="selected-times">
@@ -99,12 +121,24 @@ function ReminderFrequency() {
 
           <div className="frequency-nav">
             <button className="back-btn" onClick={handleBack}><FaArrowLeft /> Volver</button>
-            <button className="continue-btn" onClick={handleNext} disabled={selectedTimes.length===0 || !selectedFrequency}>CONTINUAR &rsaquo;</button>
+            <button
+              className="continue-btn"
+              onClick={handleNext}
+              disabled={
+                (selectedFrequency === 'personalizada' && !customInterval) ||
+                (selectedFrequency !== 'personalizada' && selectedTimes.length === 0) ||
+                !selectedFrequency
+              }
+            >
+              CONTINUAR &rsaquo;
+            </button>
           </div>
         </div>
       </div>
 
-      {showTimeTable && <TimeTable onClose={()=>setShowTimeTable(false)} onConfirm={handleTimeSelect} />}
+      {showTimeTable && selectedFrequency !== 'personalizada' && (
+        <TimeTable onClose={()=>setShowTimeTable(false)} onConfirm={handleTimeSelect} />
+      )}
     </>
   );
 }
