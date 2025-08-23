@@ -69,22 +69,6 @@ function TimeTable({ onClose, onConfirm }) {
             onChange={(e) => setTime(e.target.value)} 
             required
           />
-
-          <h2>Seleccionar Horarios (24h)</h2>
-          <button className="time-table-close" onClick={onClose}>✕</button>
-        </div>
-
-        <div className="time-slots">
-          {allTimes.map((time) => (
-            <div
-              key={time}
-              className={`time-slot ${selectedTimes.includes(time) ? "selected" : ""}`}
-              onClick={() => toggleTimeSelection(time)}
-            >
-              {time}
-            </div>
-          ))}
-
         </div>
 
         <div className="time-table-actions">

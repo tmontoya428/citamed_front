@@ -4,12 +4,14 @@ import { FaBell, FaFileAlt } from "react-icons/fa";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Home.css";
+import axios from "axios";
 
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [reminders, setReminders] = useState([]);
   const navigate = useNavigate();
 
-  // Redirige al login si no hay token
+  // 🔐 Redirige al login si no hay token
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -17,20 +19,68 @@ const Home = () => {
     }
   }, [navigate]);
 
-  // Evita volver atrás usando las flechitas del navegador
+  // 🚫 Evita volver atrás con el navegador
   useEffect(() => {
     const preventBack = () => {
       window.history.pushState(null, "", window.location.href);
     };
-
     window.history.pushState(null, "", window.location.href);
     window.addEventListener("popstate", preventBack);
-
-    return () => {
-      window.removeEventListener("popstate", preventBack);
-    };
+    return () => window.removeEventListener("popstate", preventBack);
   }, []);
 
+  // 📥 Traer recordatorios desde el backend
+  useEffect(() => {
+    const fetchReminders = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/reminders", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        setReminders(res.data || []);
+      } catch (err) {
+        console.error("❌ Error al traer recordatorios:", err);
+      }
+    };
+    fetchReminders();
+  }, []);
+
+  // 🔎 Helpers para comparar SOLO la fecha (YYYY-MM-DD), ignorando horas/zona
+  const toISODate = (date) => {
+    // Normaliza a medianoche local y luego toma la parte de fecha
+    const localMidnight = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+    return localMidnight.toISOString().slice(0, 10); // "YYYY-MM-DD"
+  };
+
+  const getReminderISODate = (rem) => {
+    // Soporta tanto "fecha" (correcto) como "Fecha" (por si quedaron registros viejos)
+    const raw = rem.fecha || rem.Fecha;
+    if (!raw) return null;
+
+    // raw suele venir como string ISO de Mongo. Tomamos solo "YYYY-MM-DD".
+    if (typeof raw === "string") {
+      // Si ya es ISO, esto funciona; si viniera en otro formato, caemos al new Date(...)
+      if (raw.length >= 10) return raw.slice(0, 10);
+      const d = new Date(raw);
+      return isNaN(d) ? null : d.toISOString().slice(0, 10);
+    } else {
+      // Si viniera como Date
+      const d = new Date(raw);
+      return isNaN(d) ? null : d.toISOString().slice(0, 10);
+    }
+  };
+
+  // 📌 Filtrar recordatorios por fecha seleccionada (comparación por YYYY-MM-DD)
+  const selectedISO = toISODate(selectedDate);
+  const filteredReminders = reminders.filter((rem) => {
+    const remISO = getReminderISODate(rem);
+    return remISO === selectedISO;
+  });
+
+  // 🔑 Cerrar sesión
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -51,27 +101,48 @@ const Home = () => {
 
       {/* Calendario */}
       <section className="bg-gray-100 p-4 my-6 rounded-lg text-center shadow-sm">
-        <Calendar 
-          onChange={setSelectedDate} 
-          value={selectedDate} 
+        <Calendar
+          onChange={setSelectedDate}
+          value={selectedDate}
           className="mx-auto calendar-custom"
         />
-        <p className="mt-4 text-gray-600">
-          No hay recordatorios pendientes para este día
-        </p>
       </section>
 
-      {/* Resumen médico */}
+      {/* Recordatorios filtrados */}
       <section className="resumen-container mb-6">
-        <h2 className="text-lg font-semibold mb-2">Mi resumen médico</h2>
-        <p className="text-gray-500">No hay datos para mostrar</p>
+        <h2 className="text-lg font-semibold mb-2">
+          Recordatorios del {selectedDate.toLocaleDateString()}
+        </h2>
+        {filteredReminders.length > 0 ? (
+          <ul className="space-y-2">
+            {filteredReminders.map((rem) => (
+              <li
+                key={rem._id}
+                className="bg-white p-3 rounded shadow flex justify-between items-center"
+              >
+                <div>
+                  <h3 className="font-bold">{rem.titulo}</h3>
+                  <p className="text-sm text-gray-600">{rem.descripcion}</p>
+                  <span className="text-xs text-blue-500">
+                    Frecuencia: {rem.frecuencia}
+                  </span>
+                </div>
+                <span className="text-sm font-semibold text-gray-800">
+                  {Array.isArray(rem.horarios) ? rem.horarios.join(", ") : "—"}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500">No hay recordatorios para este día</p>
+        )}
       </section>
 
       {/* Herramientas */}
       <section>
         <h2 className="titulo-h2 mb-4">Herramientas y Utilidades</h2>
         <div className="grid grid-cols-2 gap-4">
-          <div 
+          <div
             className="bg-gray-200 hover:bg-gray-300 transition p-4 rounded-lg text-center cursor-pointer shadow"
             onClick={() => navigate("/reminder")}
           >
@@ -80,7 +151,7 @@ const Home = () => {
             <p className="text-sm text-gray-600">Para medicación, pastillas, etc.</p>
           </div>
 
-          <div 
+          <div
             className="bg-gray-200 hover:bg-gray-300 transition p-4 rounded-lg text-center cursor-pointer shadow"
             onClick={() => navigate("/follow-up")}
           >
@@ -93,10 +164,10 @@ const Home = () => {
 
       {/* Imagen ilustrativa */}
       <div className="text-center mt-8">
-        <img 
-          src="/public/citas.avif" 
-          alt="Seguimiento y cumplimiento" 
-          className="img mx-auto max-w-xs sm:max-w-sm rounded-lg shadow" 
+        <img
+          src="/public/citas.avif"
+          alt="Seguimiento y cumplimiento"
+          className="img mx-auto max-w-xs sm:max-w-sm rounded-lg shadow"
         />
       </div>
     </div>
