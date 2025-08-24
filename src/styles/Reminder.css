@@ -142,43 +142,104 @@
   background: darkred;
 }
 
-
-
+/* Contenido de la tarjeta */
 .reminder-list {
   display: flex;
-  flex-wrap: wrap; /* Permite que salten de línea si no caben */
-  gap: 20px; /* Espacio entre tarjetas */
-  justify-content: flex-start; /* Alinea a la izquierda */
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
   padding: 20px;
   list-style: none;
 }
 
 .reminder-item {
+  background: #fdfdfd; /* Fondo claro */
+  border-radius: 18px;
+  min-width: 260px;
+  max-width: 300px;
+  flex: 1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
-  flex-direction: column; /* Info arriba, botón abajo */
-  justify-content: space-between;
-  align-items: flex-start;
-  background: #f9f9f9;
-  border-radius: 12px;
-  padding: 16px;
-  min-width: 250px; /* Ancho mínimo de cada tarjeta */
-  max-width: 300px; /* Opcional: limitar ancho */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  justify-content: flex-start;
   text-align: left;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  position: relative;
 }
 
-.reminder-info h3 {
-  margin: 0 0 8px;
-  font-size: 1.1rem;
+/* Hover suave */
+.reminder-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Header más calmado */
+.reminder-header {
+  background: #7f86d4; /* Azul muy suave */
+  padding: 14px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff; /* Azul oscuro para contraste */
+  text-align: center;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #d0ddf5;
+}
+
+/* Línea decorativa opcional */
+.reminder-header::after {
+  content: "";
+  display: block;
+  margin: 6px auto 0;
+  width: 40px;
+  height: 3px;
+  background: #9bbcff;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.reminder-item:hover .reminder-header::after {
+  width: 70px;
+}
+
+/* Contenido */
+.reminder-info {
+  padding: 18px;
+  text-align: center;
   color: #333;
+  font-size: 1rem;
 }
 
 .reminder-info p {
-  margin: 0 0 8px;
-  font-size: 0.95rem;
-  color: #555;
+  margin: 6px 0;
+  font-size: 1rem;
+  color: #444;
 }
 
+/* Texto pequeño */
+.reminder-info small {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+/* Botón eliminar */
 .delete-button {
-  align-self: flex-end; /* botón alineado a la derecha */
+  align-self: flex-end;
+  margin: 12px;
+  background: #ff7070;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.delete-button:hover {
+  background: #e85a5a;
+  transform: scale(1.1);
 }
