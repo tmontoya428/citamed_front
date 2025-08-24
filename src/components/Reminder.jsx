@@ -51,21 +51,17 @@ const Reminder = () => {
               <li key={reminder._id} className="reminder-item">
                 <div className="reminder-header">{reminder.titulo}</div>
                 <div className="reminder-info">
-                  <small><b>Descripción:</b>{reminder.descripcion}</small>
+                  <p>{reminder.descripcion}</p>
                   <small><b>Frecuencia:</b> {reminder.frecuencia}</small>
 
+                  {/* Mostrar horarios */}
                   {reminder.horarios && reminder.horarios.length > 0 ? (
-                    reminder.horarios.map((horarioCompleto, index) => {
-                      const partes = horarioCompleto.split(" ");
-                      const fecha = partes[0];
-                      const hora = partes.slice(1).join(" ");
-                      return (
-                        <div key={index} className="horario-item">
-                          <small><b>Hora:</b> {hora}</small>
-                          <small><b>Fecha:</b> {fecha}</small>
-                        </div>
-                      );
-                    })
+                    reminder.horarios.map((horaStr, index) => (
+                      <div key={index} className="horario-item">
+                        <small><b>Hora:</b> {horaStr}</small>
+                        <small><b>Fecha:</b> {new Date(reminder.fecha).toLocaleDateString("es-CO")}</small>
+                      </div>
+                    ))
                   ) : (
                     reminder.fecha && (
                       <div className="horario-item">
