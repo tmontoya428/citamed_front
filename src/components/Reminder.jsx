@@ -51,7 +51,7 @@ const Reminder = () => {
               <li key={reminder._id} className="reminder-item">
                 <div className="reminder-header">{reminder.titulo}</div>
                 <div className="reminder-info">
-                  <p>{reminder.descripcion}</p>
+                  <small><b>Descripción:</b>{reminder.descripcion}</small>
                   <small><b>Frecuencia:</b> {reminder.frecuencia}</small>
 
                   {/* Mostrar horarios */}

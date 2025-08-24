@@ -357,3 +357,73 @@ img {
   }
 }
 
+
+/* Resumen Médico  tarjeticas dentro*/
+.resumen-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+  font-size: 1.3rem;
+}
+
+
+.resumen-container h2 {
+  font-size: 2.1rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: black;
+  text-align: center;
+}
+
+.resumen-container ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* tarjeticas en grilla */
+  gap: 16px;
+}
+
+.resumen-container li {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 2px solid #3b82f6;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.resumen-container li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.resumen-container h3 {
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #1e40af; /* azul sobrio */
+}
+
+.resumen-container p {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.resumen-container span {  /* tarjeta hora */
+  font-size: 0.8rem;
+  text-align: center;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.resumen-container li div {  /* tarjeta info frecuencia */
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
