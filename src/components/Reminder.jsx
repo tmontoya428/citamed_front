@@ -61,22 +61,19 @@ const Reminder = () => {
         ) : (
           <ul className="reminder-list">
             {reminders.map((reminder) => (
-              <li key={reminder._id} className="reminder-item">
+             <li key={reminder._id} className="reminder-item">
+                <div className="reminder-header">{reminder.titulo}</div>
                 <div className="reminder-info">
-                  <h3>{reminder.titulo}</h3>
-                  <p>{reminder.descripcion}</p>
-                  <small><b>Frecuencia:</b> {reminder.frecuencia}</small><br />
-                  {reminder.hora && <small><b>Hora:</b> {reminder.hora}</small>}<br />
-                  {reminder.dosis && reminder.unidad && (
-                    <small>
-                      <b>Dosis:</b> {reminder.dosis} {reminder.unidad}
-                    </small>
-                  )}
+                <p>{reminder.descripcion}</p>
+                <small><b>Frecuencia:</b> {reminder.frecuencia}</small>
+                {reminder.hora && <small><b>Hora:</b> {reminder.hora}</small>}
+                {reminder.dosis && reminder.unidad && (
+                  <small>
+                    <b>Dosis:</b> {reminder.dosis} {reminder.unidad}
+                  </small>
+                )}
                 </div>
-                <button 
-                  className="delete-button" 
-                  onClick={() => eliminarRecordatorio(reminder._id)}
-                >
+                <button className="delete-button" onClick={() => eliminarRecordatorio(reminder._id)}>
                   <FaTrash />
                 </button>
               </li>
@@ -108,10 +105,10 @@ const Reminder = () => {
           <FaArrowLeft />
         </button>
         <h1>RECORDATORIOS</h1>
-        <button className="nav-button">
+        <button className="nav-button" onClick={() => navigate("/home")}>
           <FaCalendarAlt /> Calendar
         </button>
-        <button className="nav-button">
+        <button className="nav-button" onClick={() => navigate("/reminde")}>
           <FaHistory /> Records
         </button>
         <button className="nav-button" onClick={() => navigate("/home")}>
