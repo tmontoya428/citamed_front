@@ -6,26 +6,13 @@ import '../styles/Remindercontrol.css';
 const Remindercontrol = () => {
   const navigate = useNavigate();
   const [titulo, setTitulo] = useState('');
-  const [fecha, setFecha] = useState('');
+  const [fecha, setFecha] = useState(''); // ahora incluye hora
   const [descripcion, setDescripcion] = useState('');
   const [frecuencia, setFrecuencia] = useState('');
-  const [horarios, setHorarios] = useState([]);
-  const [nuevoHorario, setNuevoHorario] = useState(""); // input de hora
   const [loading, setLoading] = useState(false);
 
   const irAReminder = () => {
     navigate('/reminder');
-  };
-
-  const handleAddHorario = () => {
-    if (nuevoHorario && !horarios.includes(nuevoHorario)) {
-      setHorarios([...horarios, nuevoHorario]);
-      setNuevoHorario("");
-    }
-  };
-
-  const handleRemoveHorario = (index) => {
-    setHorarios(horarios.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -36,8 +23,8 @@ const Remindercontrol = () => {
       return;
     }
 
-    if (horarios.length === 0) {
-      alert('Debes agregar al menos un horario');
+    if (!fecha) {
+      alert('Debes seleccionar fecha y hora del control');
       return;
     }
 
@@ -51,10 +38,9 @@ const Remindercontrol = () => {
     const reminder = { 
       tipo: "control", 
       titulo,
-      fecha,
+      fecha,  // fecha + hora
       descripcion, 
-      frecuencia, 
-      horarios 
+      frecuencia
     };
 
     try {
@@ -76,7 +62,7 @@ const Remindercontrol = () => {
         setTitulo('');
         setDescripcion('');
         setFrecuencia('');
-        setHorarios([]);
+        setFecha('');
         navigate("/reminder-created");
       } else {
         console.error("❌ Error al guardar recordatorio:", data.message);
@@ -113,15 +99,15 @@ const Remindercontrol = () => {
               onChange={(e) => setTitulo(e.target.value)}
               required
             />
-            <label className="remindercontrol-label">Fecha de control</label>
+
+            <label className="remindercontrol-label">Fecha y hora del control</label>
             <input
-              type="date"
+              type="datetime-local"
               className="remindercontrol-fecha"
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
               required
             />
-
 
             <label className="remindercontrol-label">Descripción</label>
             <textarea
@@ -145,26 +131,7 @@ const Remindercontrol = () => {
               ))}
             </div>
 
-            <p className="remindercontrol-label">Horarios</p>
-            <div className="remindercontrol-horarios">
-              <input
-                type="time"
-                className='time'
-                value={nuevoHorario}
-                onChange={(e) => setNuevoHorario(e.target.value)}
-              />
-              <button type="button" onClick={handleAddHorario}>➕ Agregar</button>
-            </div>
-
-            <ul  className="horarios-list">
-              {horarios.map((hora, i) => (
-                <li key={i}>
-                  {hora} <button type="button" onClick={() => handleRemoveHorario(i)}>❌</button>
-                </li>
-              ))}
-            </ul>
-
-            <p className="remindercontrol-info">❗ Las notificaciones serán según los horarios establecidos</p>
+            <p className="remindercontrol-info">❗ La notificación se enviará según la fecha y hora seleccionadas</p>
 
             <button
               type="submit"
