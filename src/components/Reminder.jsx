@@ -36,7 +36,7 @@ const Reminder = () => {
       const sortedReminders = res.data.sort((a, b) => {
         const fechaA = new Date(a.fecha).getTime();
         const fechaB = new Date(b.fecha).getTime();
-        return fechaA - fechaB; // Ascendente (más antiguo → más nuevo)
+        return fechaB - fechaA; // Ascendente (más antiguo → más nuevo)
       });
 
       setReminders(sortedReminders);
