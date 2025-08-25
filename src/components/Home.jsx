@@ -122,13 +122,13 @@ const Home = () => {
               >
                 <div>
                   <h3 className="font-bold">{rem.titulo}</h3>
-                  <p className="text-sm text-gray-600">{rem.descripcion}</p>
+                  <p className="text-sm text-gray-600"> Descripción: {rem.descripcion}</p>
                   <span className="text-xs text-blue-500">
                     Frecuencia: {rem.frecuencia}
                   </span>
                 </div>
                 <span className="text-sm font-semibold text-gray-800">
-                  {Array.isArray(rem.horarios) ? rem.horarios.join(", ") : "—"}
+                  ⏰{Array.isArray(rem.horarios) ? rem.horarios.join(", ") : "—"}
                 </span>
               </li>
             ))}

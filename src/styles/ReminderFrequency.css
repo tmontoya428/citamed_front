@@ -6,20 +6,30 @@
   background-color: white;
 }
 
-.frequency-header {
+/* ✅ Header fijo en la parte superior */
+nav.bottom {
   background-color: #839ee3;
-  padding: 20px 30px;
+  height: 60px;             /* altura fija */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
   color: white;
-  font-weight: bold;
-  font-size: 32px;
+  position: fixed;          /* se queda arriba */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
+/* ✅ Ahora el contenido arranca debajo del header */
 .frequency-box {
-  padding: 50px 40px;
+  padding: 70px 50px;
   text-align: center;
   max-width: 1200px;
   margin: auto;
   background-color: white;
+  margin-top: 80px;  /* igual o mayor a la altura del nav */
 }
 
 .frequency-title-bar {
@@ -235,4 +245,67 @@
 .continue-btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+
+/*  Contenedor del intervalo personalizado */
+.custom-interval {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-top: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/*  Label */
+.custom-interval label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 📌 Select */
+.custom-interval select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background:  #839ee3;
+  color: #000000;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.custom-interval select:hover {
+  border-color: #7aa4ff;
+  background: #f0f6ff;
+}
+
+.custom-interval select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  background: #eef5ff;
+  box-shadow: 0 0 4px rgba(74, 144, 226, 0.4);
+}
+
+/* 📌 Texto con icono */
+.custom-interval p {
+  font-size: 13px;
+  text-align: center;
+  color: #000000;
+  display: flex;
+  justify-content: center;  /* centra el ícono + texto */
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.custom-interval p svg {
+  color: #000000;
+  font-size: 16px;
 }
