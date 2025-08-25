@@ -39,6 +39,10 @@
   padding: 5px;
 }
 
+.followup-back:hover{
+  background-color: #5a67d8;
+}
+
 .followup-title {
   font-size: 1.4rem;
   font-weight: 600;

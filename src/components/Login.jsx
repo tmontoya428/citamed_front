@@ -84,7 +84,7 @@ function Login() {
   return (
     <div className="login-wrapper">
       <div className="login-image"></div>
-
+      <h1 className="title">CITAMED</h1>
       <div className="login-container">
         <div className="login-box">
           <h2>INICIO DE SESIÓN</h2>
