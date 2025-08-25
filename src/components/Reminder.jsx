@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Reminder.css";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaCalendarAlt, FaHistory, FaPlus, FaUsers, FaPills, FaTimes, FaTrash } from "react-icons/fa";
+import { 
+  FaArrowLeft, 
+  FaCalendarAlt, 
+  FaHistory, 
+  FaPlus, 
+  FaUsers, 
+  FaPills, 
+  FaTimes, 
+  FaTrash 
+} from "react-icons/fa";
 import axios from "axios";
 
 const Reminder = () => {
@@ -22,7 +31,15 @@ const Reminder = () => {
       const res = await axios.get("http://localhost:5000/api/reminders", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setReminders(res.data);
+
+      // 🔹 Ordenar por fecha ascendente
+      const sortedReminders = res.data.sort((a, b) => {
+        const fechaA = new Date(a.fecha).getTime();
+        const fechaB = new Date(b.fecha).getTime();
+        return fechaA - fechaB; // Ascendente (más antiguo → más nuevo)
+      });
+
+      setReminders(sortedReminders);
     } catch (error) {
       console.error("❌ Error al traer recordatorios:", error);
     }
@@ -34,7 +51,16 @@ const Reminder = () => {
       await axios.delete(`http://localhost:5000/api/reminders/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setReminders(reminders.filter((r) => r._id !== id));
+
+      // Filtramos y volvemos a ordenar
+      const updatedReminders = reminders.filter((r) => r._id !== id);
+      const sortedReminders = updatedReminders.sort((a, b) => {
+        const fechaA = new Date(a.fecha).getTime();
+        const fechaB = new Date(b.fecha).getTime();
+        return fechaA - fechaB;
+      });
+
+      setReminders(sortedReminders);
     } catch (error) {
       console.error("❌ Error al eliminar recordatorio:", error);
     }
@@ -51,7 +77,7 @@ const Reminder = () => {
               <li key={reminder._id} className="reminder-item">
                 <div className="reminder-header">{reminder.titulo}</div>
                 <div className="reminder-info">
-                  <small><b>Descripción:</b>{reminder.descripcion}</small>
+                  <small><b>Descripción:</b> {reminder.descripcion}</small>
                   <small><b>Frecuencia:</b> {reminder.frecuencia}</small>
 
                   {/* Mostrar horarios */}
@@ -65,8 +91,14 @@ const Reminder = () => {
                   ) : (
                     reminder.fecha && (
                       <div className="horario-item">
-                        <small><b>Hora:</b> {new Date(reminder.fecha).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" })}</small>
-                        <small><b>Fecha:</b> {new Date(reminder.fecha).toLocaleDateString("es-CO")}</small>
+                        <small>
+                          <b>Hora:</b>{" "}
+                          {new Date(reminder.fecha).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" })}
+                        </small>
+                        <small>
+                          <b>Fecha:</b>{" "}
+                          {new Date(reminder.fecha).toLocaleDateString("es-CO")}
+                        </small>
                       </div>
                     )
                   )}

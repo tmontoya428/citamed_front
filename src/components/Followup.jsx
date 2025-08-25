@@ -18,7 +18,15 @@ const Followup = () => {
       const res = await axios.get("http://localhost:5000/api/reminders", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setReminders(res.data);
+
+      // 🔹 Ordenar por fecha ascendente
+      const sortedReminders = res.data.sort((a, b) => {
+        const fechaA = new Date(a.fecha).getTime();
+        const fechaB = new Date(b.fecha).getTime();
+        return fechaA - fechaB;
+      });
+
+      setReminders(sortedReminders);
     } catch (error) {
       console.error("❌ Error al traer recordatorios:", error);
     }
@@ -34,10 +42,15 @@ const Followup = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Actualizamos solo ese reminder en el estado
-      setReminders((prev) =>
-        prev.map((r) => (r._id === id ? { ...r, completed: res.data.completed, completedAt: res.data.completedAt } : r))
-      );
+      // Actualizamos solo ese reminder en el estado y reordenamos
+      setReminders((prev) => {
+        const updated = prev.map((r) =>
+          r._id === id
+            ? { ...r, completed: res.data.completed, completedAt: res.data.completedAt }
+            : r
+        );
+        return updated.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+      });
     } catch (error) {
       console.error("❌ Error al marcar completado:", error);
     }
