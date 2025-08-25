@@ -92,8 +92,11 @@ html, body {
   text-decoration: underline;
 }
 
-.login-box .recaptcha-container {
-  margin-bottom: 15px; /* espacio entre captcha y el botón */
-  display: flex;
-  justify-content: center; /* lo centra dentro del login-box */
+
+.title {
+  font-size: 50px;
+  background-color: white;
+  color: #7f86d4;
+  margin-bottom: 0px;
+  text-align: center;
 }

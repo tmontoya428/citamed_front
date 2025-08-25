@@ -42,7 +42,6 @@ const Followup = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-<<<<<<< HEAD
       // Actualizamos solo ese reminder en el estado y reordenamos
       setReminders((prev) => {
         const updated = prev.map((r) =>
@@ -52,12 +51,6 @@ const Followup = () => {
         );
         return updated.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
       });
-=======
-      // Actualizamos solo ese reminder en el estado
-      setReminders((prev) =>
-        prev.map((r) => (r._id === id ? { ...r, completed: res.data.completed, completedAt: res.data.completedAt } : r))
-      );
->>>>>>> 973117d9589a564061ca82e6ad6254dd0d031fad
     } catch (error) {
       console.error("❌ Error al marcar completado:", error);
     }
