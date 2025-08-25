@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 import "../styles/Login.css";
 
 const API_URL = "http://localhost:5000/api/login";
+const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [captchaToken, setCaptchaToken] = useState(null);
   const navigate = useNavigate();
 
-  // Estilo personalizado
+  // Fondo de login
   useEffect(() => {
     document.body.classList.add("login-background");
     return () => {
@@ -18,7 +21,7 @@ function Login() {
     };
   }, []);
 
-  // Verificar token existente al entrar a /login
+  // Verificar token existente
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -42,26 +45,28 @@ function Login() {
     e.preventDefault();
     setError("");
 
+    if (!captchaToken) {
+      setError("⚠️ Por favor resuelve el captcha.");
+      return;
+    }
+
     try {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, captcha: captchaToken }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         try {
-          const payload = JSON.parse(atob(data.token.split('.')[1]));
-          if (!payload.userId) {
-            throw new Error("Token sin userId");
-          }
+          const payload = JSON.parse(atob(data.token.split(".")[1]));
+          if (!payload.userId) throw new Error("Token sin userId");
 
           localStorage.setItem("token", data.token);
           localStorage.setItem("role", data.role);
 
-          // Redirigir según el rol
           if (data.role === "admin") {
             navigate("/admin/dashboard", { replace: true });
           } else {
@@ -74,7 +79,6 @@ function Login() {
       } else {
         setError(data.msg || "Credenciales incorrectas.");
       }
-
     } catch (err) {
       console.error("❌ Error de conexión:", err.message);
       setError("No se pudo conectar con el servidor.");
@@ -114,14 +118,26 @@ function Login() {
               />
             </div>
 
+            {/* CAPTCHA */}
+            <ReCAPTCHA
+              sitekey={SITE_KEY}
+              onChange={(token) => setCaptchaToken(token)}
+              className="captcha-box"
+            />
+
             <button type="submit">Iniciar Sesión</button>
           </form>
 
           {error && <p className="error-message">{error}</p>}
 
+          {/* 🔹 Mantengo los enlaces de la versión anterior */}
           <p>¿Olvidaste tu contraseña?</p>
-          <p>¿Aún no estás registrado? <a href="/register">Registrarse</a></p>
-          <p>¿Volver a la página principal? <a href="/">Inicio</a></p>
+          <p>
+            ¿Aún no estás registrado? <a href="/register">Registrarse</a>
+          </p>
+          <p>
+            ¿Volver a la página principal? <a href="/">Inicio</a>
+          </p>
         </div>
       </div>
     </div>

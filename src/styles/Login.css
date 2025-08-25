@@ -89,3 +89,9 @@ html, body {
 .login-box a:hover {
   text-decoration: underline;
 }
+
+.login-box .recaptcha-container {
+  margin-bottom: 15px; /* espacio entre captcha y el botón */
+  display: flex;
+  justify-content: center; /* lo centra dentro del login-box */
+}
