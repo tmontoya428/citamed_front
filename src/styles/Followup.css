@@ -6,6 +6,12 @@
   background-color: white;
   position: relative;
 }
+.followup-completed {
+  font-size: 0.85rem;
+  color: #155724;
+  margin-top: 5px;
+  font-weight: bold;
+}
 
 /* 📌 Header fijo */
 .followup-header {

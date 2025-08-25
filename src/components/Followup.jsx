@@ -24,6 +24,25 @@ const Followup = () => {
     }
   };
 
+  // ✅ Marcar recordatorio como completado
+  const handleToggleCompleted = async (id, currentState) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.put(
+        `http://localhost:5000/api/reminders/${id}/completed`,
+        { completed: !currentState },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Actualizamos solo ese reminder en el estado
+      setReminders((prev) =>
+        prev.map((r) => (r._id === id ? { ...r, completed: res.data.completed, completedAt: res.data.completedAt } : r))
+      );
+    } catch (error) {
+      console.error("❌ Error al marcar completado:", error);
+    }
+  };
+
   return (
     <div className="followup-container">
       {/* Barra superior */}
@@ -41,7 +60,10 @@ const Followup = () => {
         ) : (
           <ul className="followup-list">
             {reminders.map((reminder) => (
-              <li key={reminder._id} className="followup-card">
+              <li
+                key={reminder._id}
+                className={`followup-card ${reminder.completed ? "completed" : ""}`}
+              >
                 <div className="followup-left">
                   {/* Ícono dinámico */}
                   {reminder.tipo === "medicamento" ? (
@@ -61,41 +83,50 @@ const Followup = () => {
                     </p>
                   )}
 
-                  {/* ✅ Mostrar horarios si existen y SIEMPRE la fecha */}
-                  {reminder.horarios && reminder.horarios.length > 0 &&
+                  {/* ✅ Mostrar horarios si existen */}
+                  {reminder.horarios &&
+                    reminder.horarios.length > 0 &&
                     reminder.horarios.map((horaStr, index) => (
                       <p key={index} className="followup-small">
                         ⏰ {horaStr}
                       </p>
                     ))}
 
+                  {/* ✅ Mostrar fecha */}
                   {reminder.fecha && (
-                    <>
-                      <p className="followup-small">
-                       {/* este codigo lo escondi porque me estaba repitiendo la hora 
-                        
-                       ⏰ {new Date(reminder.fecha).toLocaleTimeString("es-CO", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })} */  }
-                      </p>
-                      <p className="followup-small">
-                        📅 {new Date(reminder.fecha).toLocaleDateString("es-CO")}
-                      </p>
-                    </>
+                    <p className="followup-small">
+                      📅 {new Date(reminder.fecha).toLocaleDateString("es-CO")}
+                    </p>
                   )}
 
+                  {/* ✅ Mostrar frecuencia */}
                   {reminder.frecuencia && (
                     <p className="followup-frequency">{reminder.frecuencia}</p>
+                  )}
+
+                  {/* ✅ Mostrar fecha de completado si existe */}
+                  {reminder.completed && reminder.completedAt && (
+                    <p className="followup-completed">
+                      ✔️ Completado el{" "}
+                      {new Date(reminder.completedAt).toLocaleString("es-CO")}
+                    </p>
                   )}
                 </div>
 
                 <div className="followup-right">
                   <p className="followup-question">
-                    {reminder.tipo === "medicamento" ? "¿Lo tomaste?" : "¿Asistió?"}
+                    {reminder.tipo === "medicamento"
+                      ? "¿Lo tomaste?"
+                      : "¿Asistió?"}
                   </p>
                   <label className="followup-switch">
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      checked={reminder.completed || false}
+                      onChange={() =>
+                        handleToggleCompleted(reminder._id, reminder.completed)
+                      }
+                    />
                     <span className="followup-slider"></span>
                   </label>
                 </div>
