@@ -15,8 +15,8 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Centrado vertical */
-  width: 100vw;  /* Centrado horizontal */
+  flex-grow: 1;
+  background-color: white;
 }
 
 /* Caja del login */
@@ -49,7 +49,9 @@ html, body {
 /* Campos de entrada */
 .login-box input {
   width: 100%;
+  color: #000;
   padding: 10px;
+  background-color: white;
   margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
