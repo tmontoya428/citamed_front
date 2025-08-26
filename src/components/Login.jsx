@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
+import loginImage from "../assets/imagencitamed.jpg";
 
 const API_URL = "http://localhost:5000/api/login";
 
@@ -10,7 +11,6 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Estilo personalizado
   useEffect(() => {
     document.body.classList.add("login-background");
     return () => {
@@ -53,7 +53,7 @@ function Login() {
 
       if (response.ok) {
         try {
-          const payload = JSON.parse(atob(data.token.split('.')[1]));
+          const payload = JSON.parse(atob(data.token.split(".")[1]));
           if (!payload.userId) {
             throw new Error("Token sin userId");
           }
@@ -61,7 +61,6 @@ function Login() {
           localStorage.setItem("token", data.token);
           localStorage.setItem("role", data.role);
 
-          // Redirigir según el rol
           if (data.role === "admin") {
             navigate("/admin/dashboard", { replace: true });
           } else {
@@ -74,7 +73,6 @@ function Login() {
       } else {
         setError(data.msg || "Credenciales incorrectas.");
       }
-
     } catch (err) {
       console.error("❌ Error de conexión:", err.message);
       setError("No se pudo conectar con el servidor.");
@@ -82,11 +80,20 @@ function Login() {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-image"></div>
-      <h1 className="title">CITAMED</h1>
+    <div className="main-container">
+      {/* Columna izquierda - Imagen */}
+      <div className="image-container">
+        <img
+          src={loginImage}
+          alt="Imagen de inicio de sesión"
+          className="login-image"
+        />
+      </div>
+
+      {/* Columna derecha - Login */}
       <div className="login-container">
         <div className="login-box">
+          <h1 className="title">CITAMED</h1>
           <h2>INICIO DE SESIÓN</h2>
 
           <form onSubmit={handleLogin}>
@@ -120,8 +127,12 @@ function Login() {
           {error && <p className="error-message">{error}</p>}
 
           <p>¿Olvidaste tu contraseña?</p>
-          <p>¿Aún no estás registrado? <a href="/register">Registrarse</a></p>
-          <p>¿Volver a la página principal? <a href="/">Inicio</a></p>
+          <p>
+            ¿Aún no estás registrado? <a href="/register">Registrarse</a>
+          </p>
+          <p>
+            ¿Volver a la página principal? <a href="/">Inicio</a>
+          </p>
         </div>
       </div>
     </div>
