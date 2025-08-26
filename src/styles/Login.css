@@ -4,18 +4,50 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: white; /* ✅ fondo blanco */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Contenedor principal */
-.login-container {
+/* Contenedor principal en dos columnas */
+.main-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+}
+
+/* Contenedor de la imagen */
+.image-container {
+  flex: 1;
+  max-width: 50%; /* mitad de la pantalla */
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+  padding: 20px;
+}
+
+.login-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.login-image:hover {
+  transform: scale(1.02);
+}
+
+/* Contenedor del login */
+.login-container {
+  flex: 1;
+  max-width: 50%; /* mitad de la pantalla */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: white;
 }
 
@@ -92,11 +124,18 @@ html, body {
   text-decoration: underline;
 }
 
-
+/* Título superior */
 .title {
   font-size: 50px;
   background-color: white;
   color: #7f86d4;
-  margin-bottom: 0px;
+  margin-bottom: 20px;
   text-align: center;
+}
+/* Captcha */
+.captcha-box {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  transform: scale(0.95); /* opcional: lo hace un poquito más compacto */
 }

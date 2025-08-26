@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import "../styles/Login.css";
+import loginImage from "../assets/imagencitamed.jpg";
 
 const API_URL = "http://localhost:5000/api/login";
 const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
@@ -13,7 +14,7 @@ function Login() {
   const [captchaToken, setCaptchaToken] = useState(null);
   const navigate = useNavigate();
 
-  // Fondo de login
+  // Fondo
   useEffect(() => {
     document.body.classList.add("login-background");
     return () => {
@@ -86,11 +87,20 @@ function Login() {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-image"></div>
-      <h1 className="title">CITAMED</h1>
+    <div className="main-container">
+      {/* Columna izquierda - Imagen */}
+      <div className="image-container">
+        <img
+          src={loginImage}
+          alt="Imagen de inicio de sesión"
+          className="login-image"
+        />
+      </div>
+
+      {/* Columna derecha - Login */}
       <div className="login-container">
         <div className="login-box">
+          <h1 className="title">CITAMED</h1>
           <h2>INICIO DE SESIÓN</h2>
 
           <form onSubmit={handleLogin}>
@@ -118,7 +128,7 @@ function Login() {
               />
             </div>
 
-            {/* CAPTCHA */}
+            {/* 🔹 CAPTCHA */}
             <ReCAPTCHA
               sitekey={SITE_KEY}
               onChange={(token) => setCaptchaToken(token)}
@@ -130,7 +140,6 @@ function Login() {
 
           {error && <p className="error-message">{error}</p>}
 
-          {/* 🔹 Mantengo los enlaces de la versión anterior */}
           <p>¿Olvidaste tu contraseña?</p>
           <p>
             ¿Aún no estás registrado? <a href="/register">Registrarse</a>
