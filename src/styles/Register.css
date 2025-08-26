@@ -1,82 +1,170 @@
 html, body {
   margin: 0;
+  padding: 0;
   height: 100%;
-  background-color: white; /* Asegurar fondo blanco */
-  font-family: Arial, sans-serif;
+  background: #f8fafc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: #f8fafc;
 }
 
 .register-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #ffffff;
-  padding: 20px;
-  width: 350px;
-}
-
-.register-container h2 {
-  color: #4a56a6;
-  font-size: 24px;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.register-container p {
-  color: #555;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.register-container form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 40px;
   width: 100%;
-}
-
-.register-container label {
-  font-weight: bold;
-  font-size: 12px;
-  color: #333;
-  display: block;
-  margin-bottom: 5px;
-}
-
-.register-container input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  width: 100%;
-  font-size: 14px;
+  max-width: 480px;
+  border: 1px solid #e2e8f0;
   box-sizing: border-box;
 }
 
-.register-container input[type="date"]::placeholder {
-  color: #aaa;
+.register-header {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-.register-container .half-width,
-.register-container .full-width {
-  width: 100%;
+.register-header h2 {
+  color: #1e293b;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
-.register-container button {
-  padding: 12px;
-  background-color: #4a56a6;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  width: 100%;
+.register-header p {
+  color: #64748b;
   font-size: 16px;
-  margin-top: 10px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  text-align: center;
+  font-size: 14px;
+}
+
+.message.success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.message.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background: #ffffff;
+  color: #1f2937;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.form-group input[type="date"] {
+  color: #1f2937;
+}
+
+.submit-button {
+  background: #667eea;
+  color: #ffffff;
+  padding: 14px 24px;
   border: none;
-  transition: background-color 0.3s;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+  width: 100%;
 }
 
-.register-container button:hover {
-  background-color: #3a458f;
+.submit-button:hover:not(:disabled) {
+  background: #5a67d8;
+  transform: translateY(-1px);
 }
 
-/* FLECHA: Ubicada en la esquina superior izquierda con color morado */
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.submit-button.loading {
+  background: #9ca3af;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.login-link a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
 .back-button-container {
   position: absolute;
   top: 20px;
@@ -84,33 +172,63 @@ html, body {
 }
 
 .back-button {
-  background: none;
-  border: none;
-  color: #4a56a6; /* Morado */
-  font-size: 25px;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 5px; /* Bordes redondeados */
-  transition: background 0.3s ease;
+  background: #ffffff;
+  color: #667eea;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
-/* Cuando pases el mouse, el fondo será morado claro */
 .back-button:hover {
-  background: #9ca8f5; /* Un tono de morado claro */
-  color: #9ca8f5; /* Morado más oscuro */
+  background: #f8fafc;
+  transform: translateY(-1px);
 }
 
-/* Cuando hagas clic, el fondo será un morado más intenso */
-.back-button:active {
-  background: #d4a1ff; /* Morado más fuerte */
-  color: #4a004a;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .register-page {
+    padding: 16px;
+  }
+  
+  .register-container {
+    padding: 24px;
+  }
+  
+  .register-header h2 {
+    font-size: 24px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .back-button-container {
+    top: 16px;
+    left: 16px;
+  }
 }
 
-.register-page {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: white;
+@media (max-width: 480px) {
+  .register-container {
+    padding: 20px;
+  }
+  
+  .register-header h2 {
+    font-size: 22px;
+  }
+  
+  .form-group input {
+    padding: 10px 14px;
+    font-size: 16px;
+  }
+  
+  .submit-button {
+    padding: 12px 20px;
+  }
 }
