@@ -11,6 +11,7 @@ import Remindercontrol from './components/Remindercontrol';
 import ReminderMedicine from './components/ReminderMedicine';
 import ReminderFrequency from './components/ReminderFrequency';
 import ReminderCreated from './components/ReminderCreated';
+import UserProfile from "./components/userProfile";
 
 import './App.css';
 
@@ -55,6 +56,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/register-admin" element={<RegisterAdmin />} />
+          <Route path="/profile" element={<UserProfile />} />
 
           {/* Redirección lógica del dashboard */}
           <Route

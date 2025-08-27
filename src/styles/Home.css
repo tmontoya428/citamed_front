@@ -204,26 +204,49 @@ header {
   
 
 
+/* Contenedor para alinear los botones */
+.button-group {
+  display: flex;
+  gap: 10px;       /* separación entre botones */
+  margin-left: auto; /* empuja todo el grupo hacia la derecha */
+}
+
+/* Botón de perfil */
+.button-profile {
+  padding: 10px;
+  background: #7f86d4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.button-profile:hover {
+  background: #4c51bf;
+}
+
+/* Botón de cerrar sesión */
 .button-close {
   padding: 10px;
   background: #7f86d4;
-  display: flex;
-  margin-left: auto;
-  border: none; /* Elimina cualquier borde */
-  outline: none; /* Evita el contorno azul en algunos navegadores */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-/* Evita el color verde en todos los estados */
-.button-close:hover, 
-.button-close:focus, 
+/* Hover/Focus */
+.button-close:hover,
+.button-close:focus,
 .button-close:active {
   background: #6e78e0 !important;
-  color: inherit !important;
+  color: white !important;
   outline: none !important;
   box-shadow: none !important;
   border: none !important;
 }
-
 
 
 .grid {
