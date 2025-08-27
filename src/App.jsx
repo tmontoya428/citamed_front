@@ -56,7 +56,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/register-admin" element={<RegisterAdmin />} />
-          <Route path="/perfil" element={<UserProfile />} />
+          <Route path="/profile" element={<UserProfile />} />
 
           {/* Redirección lógica del dashboard */}
           <Route
