@@ -14,7 +14,7 @@ function Login() {
   const [captchaToken, setCaptchaToken] = useState(null);
   const navigate = useNavigate();
 
-  // Fondo de login
+  // Fondo
   useEffect(() => {
     document.body.classList.add("login-background");
     return () => {
@@ -128,7 +128,7 @@ function Login() {
               />
             </div>
 
-            {/* CAPTCHA */}
+            {/* 🔹 CAPTCHA */}
             <ReCAPTCHA
               sitekey={SITE_KEY}
               onChange={(token) => setCaptchaToken(token)}
@@ -140,7 +140,6 @@ function Login() {
 
           {error && <p className="error-message">{error}</p>}
 
-          {/* 🔹 Mantengo los enlaces de la versión anterior */}
           <p>¿Olvidaste tu contraseña?</p>
           <p>
             ¿Aún no estás registrado? <a href="/register">Registrarse</a>

@@ -132,3 +132,10 @@ html, body {
   margin-bottom: 20px;
   text-align: center;
 }
+/* Captcha */
+.captcha-box {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  transform: scale(0.95); /* opcional: lo hace un poquito más compacto */
+}
