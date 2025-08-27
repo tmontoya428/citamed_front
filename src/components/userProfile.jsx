@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import '../styles/userProfile.css'
 
 export default function Profile() {
   const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false); // 🔹 Controla si está en modo edición
+  const [isEditing, setIsEditing] = useState(false); 
   const token = localStorage.getItem("token");
 
   // 🔹 Obtener info del usuario al cargar el componente
@@ -36,7 +38,7 @@ export default function Profile() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFormData(res.data);
-      setIsEditing(false); // volver a modo lectura
+      setIsEditing(false); 
       alert("✅ Información actualizada");
     } catch (err) {
       console.error("❌ Error al actualizar:", err);
@@ -44,120 +46,109 @@ export default function Profile() {
     }
   };
 
+  const navigate = useNavigate();
+
   if (loading) return <p>Cargando...</p>;
   if (!formData) return <p>No hay información de usuario</p>;
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded">
-      <h2 className="text-xl font-bold mb-4">Mi Perfil</h2>
+    <div className="profile-container">
+      <h2>Mi Perfil</h2>
 
-      <div className="space-y-4">
-        {/* Nombre */}
-        <div>
-          <label className="block font-medium">Nombre</label>
-          {isEditing ? (
-            <input
-              type="text"
-              name="name"
-              value={formData.name || ""}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-          ) : (
-            <p className="p-2 border rounded bg-gray-100">{formData.name}</p>
-          )}
-        </div>
+      {/* Nombre */}
+      <div className="field">
+        <label>Nombre</label>
+        {isEditing ? (
+          <input
+            type="text"
+            name="name"
+            value={formData.name || ""}
+            onChange={handleChange}
+          />
+        ) : (
+          <p>{formData.name}</p>
+        )}
+      </div>
 
-        {/* Apellido */}
-        <div>
-          <label className="block font-medium">Apellido</label>
-          {isEditing ? (
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName || ""}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-          ) : (
-            <p className="p-2 border rounded bg-gray-100">{formData.lastName}</p>
-          )}
-        </div>
+      {/* Apellido */}
+      <div className="field">
+        <label>Apellido</label>
+        {isEditing ? (
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName || ""}
+            onChange={handleChange}
+          />
+        ) : (
+          <p>{formData.lastName}</p>
+        )}
+      </div>
 
-        {/* Fecha de nacimiento */}
-        <div>
-          <label className="block font-medium">Fecha de nacimiento</label>
-          {isEditing ? (
-            <input
-              type="date"
-              name="birthdate"
-              value={formData.birthdate || ""}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-          ) : (
-            <p className="p-2 border rounded bg-gray-100">{formData.birthdate}</p>
-          )}
-        </div>
+      {/* Fecha de nacimiento */}
+      <div className="field">
+        <label>Fecha de nacimiento</label>
+        {isEditing ? (
+          <input
+            type="date"
+            name="birthdate"
+            value={formData.birthdate || ""}
+            onChange={handleChange}
+          />
+        ) : (
+          <p>{formData.birthdate}</p>
+        )}
+      </div>
 
-        {/* Teléfono */}
-        <div>
-          <label className="block font-medium">Teléfono</label>
-          {isEditing ? (
-            <input
-              type="text"
-              name="phone"
-              value={formData.phone || ""}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-          ) : (
-            <p className="p-2 border rounded bg-gray-100">{formData.phone}</p>
-          )}
-        </div>
+      {/* Teléfono */}
+      <div className="field">
+        <label>Teléfono</label>
+        {isEditing ? (
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone || ""}
+            onChange={handleChange}
+          />
+        ) : (
+          <p>{formData.phone}</p>
+        )}
+      </div>
 
-        {/* Correo */}
-        <div>
-          <label className="block font-medium">Correo</label>
-          {isEditing ? (
-            <input
-              type="email"
-              name="email"
-              value={formData.email || ""}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-          ) : (
-            <p className="p-2 border rounded bg-gray-100">{formData.email}</p>
-          )}
-        </div>
+      {/* Correo */}
+      <div className="field">
+        <label>Correo</label>
+        {isEditing ? (
+          <input
+            type="email"
+            name="email"
+            value={formData.email || ""}
+            onChange={handleChange}
+          />
+        ) : (
+          <p>{formData.email}</p>
+        )}
       </div>
 
       {/* Botones */}
-      <div className="mt-6 flex gap-4">
+      <div className="actions">
         {isEditing ? (
           <>
-            <button
-              onClick={handleSave}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
+            <button onClick={handleSave} className="btn btn-save">
               Guardar
             </button>
-            <button
-              onClick={() => setIsEditing(false)}
-              className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-            >
+            <button onClick={() => setIsEditing(false)} className="btn btn-cancel">
               Cancelar
             </button>
           </>
         ) : (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
+          <button onClick={() => setIsEditing(true)} className="btn btn-edit">
             Editar
           </button>
         )}
+        <button className="btn btn-edit" onClick={() => navigate("/home")}>
+          Volver
+        </button>
       </div>
     </div>
   );

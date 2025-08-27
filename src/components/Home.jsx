@@ -94,9 +94,16 @@ const Home = () => {
       {/* Encabezado */}
       <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md">
         <h1 className="text-xl font-bold">Mi Control Médico</h1>
+        {/* Boton de perfil */} 
+      <div className="button-group">
+        <button className="button-profile" onClick={() => navigate("/profile")}>
+          Mi Perfil
+        </button>
+        {/* Boton de cerrar sesion */} 
         <button className="button-close" onClick={handleLogout}>
           Cerrar Sesión
         </button>
+      </div>
       </header>
 
       {/* Calendario */}
