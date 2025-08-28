@@ -9,17 +9,34 @@ function ReminderFrequency() {
   const formData = location.state || {};
 
   const [selectedFrequency, setSelectedFrequency] = useState(null);
-  const [customInterval, setCustomInterval] = useState('');
+  const [customInterval, setCustomInterval] = useState({ number: '', unit: '' });
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleBack = () => navigate('/reminder-medicine');
 
-  const handleFrequencySelect = freq => {
+  const handleFrequencySelect = (freq) => {
     setSelectedFrequency(freq);
-    setCustomInterval('');
+    setCustomInterval({ number: '', unit: '' });
+    setErrorMsg('');
   };
 
   const handleNext = async () => {
+    if (!selectedFrequency) {
+      setErrorMsg("⚠️ Debes seleccionar una frecuencia.");
+      return;
+    }
+
+    if (selectedFrequency === 'personalizada' && (!customInterval.number || !customInterval.unit)) {
+      setErrorMsg("⚠️ Debes ingresar un número y una unidad para el intervalo personalizado.");
+      return;
+    }
+
     const token = localStorage.getItem('token');
+    if (!token) {
+      setErrorMsg("⚠️ No se encontró sesión activa.");
+      return;
+    }
+
     const reminder = {
       tipo: 'medicamento',
       titulo: formData.titulo,
@@ -28,8 +45,16 @@ function ReminderFrequency() {
       unidad: formData.unidad,
       cantidadDisponible: Number(formData.cantidadDisponible),
       fecha: formData.fecha,
-      frecuencia: selectedFrequency.charAt(0).toUpperCase() + selectedFrequency.slice(1),
-      intervaloPersonalizado: selectedFrequency === 'personalizada' ? customInterval : null
+      frecuencia: 
+        selectedFrequency === 'diaria'
+          ? 'Diaria'
+          : selectedFrequency === 'semanal'
+          ? 'Semanal'
+          : 'Personalizada',
+      intervaloPersonalizado: 
+        selectedFrequency === 'personalizada' 
+          ? `${customInterval.number} ${customInterval.unit}` 
+          : null,
     };
 
     try {
@@ -37,16 +62,20 @@ function ReminderFrequency() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(reminder),
       });
       const data = await res.json();
-      if (res.ok) navigate('/reminder-created');
-      else alert('❌ Error al guardar recordatorio: ' + data.message);
+
+      if (res.ok) {
+        navigate('/reminder-created');
+      } else {
+        setErrorMsg('❌ Error al guardar recordatorio: ' + (data.message || 'Error desconocido'));
+      }
     } catch (error) {
       console.error('🚨 Error al conectar con backend:', error);
-      alert('No se pudo conectar con el servidor.');
+      setErrorMsg('No se pudo conectar con el servidor.');
     }
   };
 
@@ -78,21 +107,40 @@ function ReminderFrequency() {
           {selectedFrequency === 'personalizada' && (
             <div className="custom-interval">
               <label>Intervalo personalizado:</label>
-              <select value={customInterval} onChange={e => setCustomInterval(e.target.value)}>
-                <option value="">--Seleccionar--</option>
-                <option value="2min">Cada 2 minutos</option>
-                <option value="2h">Cada 2 horas</option>
-              </select>
+              <div className="interval-input">
+                <input 
+                  type="number"
+                  min="1"
+                  placeholder="Ej: 2"
+                  value={customInterval.number}
+                  onChange={e => setCustomInterval({ ...customInterval, number: e.target.value })}
+                />
+                <select
+                  value={customInterval.unit}
+                  onChange={e => setCustomInterval({ ...customInterval, unit: e.target.value })}
+                >
+                  <option value="">--Unidad--</option>
+                  <option value="minutos">Minutos</option>
+                  <option value="horas">Horas</option>
+                  <option value="dias">Dias</option>
+                  <option value="semanas">Semanas</option>
+                </select>
+              </div>
               <p><FaInfoCircle /> Se usará la hora de inicio del recordatorio como primer envío.</p>
             </div>
           )}
+
+          {errorMsg && <p className="error-msg">{errorMsg}</p>}
 
           <div className="frequency-nav">
             <button className="back-btn" onClick={handleBack}><FaArrowLeft /> Volver</button>
             <button
               className="continue-btn"
               onClick={handleNext}
-              disabled={!selectedFrequency || (selectedFrequency === 'personalizada' && !customInterval)}
+              disabled={
+                !selectedFrequency || 
+                (selectedFrequency === 'personalizada' && (!customInterval.number || !customInterval.unit))
+              }
             >
               CONTINUAR &rsaquo;
             </button>
