@@ -44,39 +44,27 @@ const Home = () => {
     fetchReminders();
   }, []);
 
-  // 🔎 Helpers para comparar SOLO la fecha (YYYY-MM-DD), ignorando horas/zona
-  const toISODate = (date) => {
-    // Normaliza a medianoche local y luego toma la parte de fecha
-    const localMidnight = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
-    return localMidnight.toISOString().slice(0, 10); // "YYYY-MM-DD"
+  // ✅ Helpers para comparar SOLO la fecha local (YYYY-MM-DD)
+  const toLocalDateString = (date) => {
+    const d = new Date(date);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
   };
 
-  const getReminderISODate = (rem) => {
-    // Soporta tanto "fecha" (correcto) como "Fecha" (por si quedaron registros viejos)
+  const getReminderDate = (rem) => {
     const raw = rem.fecha || rem.Fecha;
     if (!raw) return null;
-
-    // raw suele venir como string ISO de Mongo. Tomamos solo "YYYY-MM-DD".
-    if (typeof raw === "string") {
-      // Si ya es ISO, esto funciona; si viniera en otro formato, caemos al new Date(...)
-      if (raw.length >= 10) return raw.slice(0, 10);
-      const d = new Date(raw);
-      return isNaN(d) ? null : d.toISOString().slice(0, 10);
-    } else {
-      // Si viniera como Date
-      const d = new Date(raw);
-      return isNaN(d) ? null : d.toISOString().slice(0, 10);
-    }
+    const d = new Date(raw);
+    if (isNaN(d)) return null;
+    return toLocalDateString(d);
   };
 
-  // 📌 Filtrar recordatorios por fecha seleccionada (comparación por YYYY-MM-DD)
-  const selectedISO = toISODate(selectedDate);
+  // 📌 Filtrar recordatorios por fecha seleccionada
+  const selectedISO = toLocalDateString(selectedDate);
   const filteredReminders = reminders.filter((rem) => {
-    const remISO = getReminderISODate(rem);
+    const remISO = getReminderDate(rem);
     return remISO === selectedISO;
   });
 
@@ -94,16 +82,14 @@ const Home = () => {
       {/* Encabezado */}
       <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md">
         <h1 className="text-xl font-bold">Mi Control Médico</h1>
-        {/* Boton de perfil */} 
-      <div className="button-group">
-        <button className="button-profile" onClick={() => navigate("/profile")}>
-          Mi Perfil
-        </button>
-        {/* Boton de cerrar sesion */} 
-        <button className="button-close" onClick={handleLogout}>
-          Cerrar Sesión
-        </button>
-      </div>
+        <div className="button-group">
+          <button className="button-profile" onClick={() => navigate("/profile")}>
+            Mi Perfil
+          </button>
+          <button className="button-close" onClick={handleLogout}>
+            Cerrar Sesión
+          </button>
+        </div>
       </header>
 
       {/* Calendario */}
@@ -129,7 +115,9 @@ const Home = () => {
               >
                 <div>
                   <h3 className="font-bold">{rem.titulo}</h3>
-                  <p className="text-sm text-gray-600"> Descripción: {rem.descripcion}</p>
+                  <p className="text-sm text-gray-600">
+                    Descripción: {rem.descripcion}
+                  </p>
                   <span className="text-xs text-blue-500">
                     Frecuencia: {rem.frecuencia}
                   </span>
@@ -155,7 +143,9 @@ const Home = () => {
           >
             <FaBell className="text-3xl mx-auto text-blue-600" />
             <h3 className="font-bold mt-2">Recordatorios</h3>
-            <p className="text-sm text-gray-600">Para medicación, pastillas, etc.</p>
+            <p className="text-sm text-gray-600">
+              Para medicación, pastillas, etc.
+            </p>
           </div>
 
           <div
@@ -164,7 +154,9 @@ const Home = () => {
           >
             <FaFileAlt className="text-3xl mx-auto text-green-600" />
             <h3 className="font-bold mt-2">Seguimiento a paciente</h3>
-            <p className="text-sm text-gray-600">Cumplimiento de tratamiento</p>
+            <p className="text-sm text-gray-600">
+              Cumplimiento de tratamiento
+            </p>
           </div>
         </div>
       </section>
