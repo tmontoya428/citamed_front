@@ -13,6 +13,7 @@ html, body {
   min-height: 100vh;
   padding: 20px;
   background: #f8fafc;
+  position: relative;
 }
 
 .register-container {
@@ -189,14 +190,25 @@ html, body {
   transform: translateY(-1px);
 }
 
-/* Responsive Design */
+/* Título CITAMED */
+.title {
+  font-size: 42px;
+  color: #667eea;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* Mejoras responsivas */
 @media (max-width: 768px) {
   .register-page {
     padding: 16px;
+    align-items: flex-start;
+    padding-top: 70px;
   }
   
   .register-container {
     padding: 24px;
+    margin-top: 20px;
   }
   
   .register-header h2 {
@@ -211,16 +223,32 @@ html, body {
   .back-button-container {
     top: 16px;
     left: 16px;
+    right: 16px;
+    text-align: center;
+  }
+  
+  .back-button {
+    display: inline-block;
+  }
+  
+  .title {
+    font-size: 36px;
   }
 }
 
 @media (max-width: 480px) {
   .register-container {
-    padding: 20px;
+    padding: 20px 16px;
+    margin-top: 10px;
   }
   
   .register-header h2 {
     font-size: 22px;
+    margin-bottom: 5px;
+  }
+  
+  .register-header p {
+    font-size: 14px;
   }
   
   .form-group input {
@@ -230,5 +258,52 @@ html, body {
   
   .submit-button {
     padding: 12px 20px;
+    font-size: 15px;
+  }
+  
+  .login-link {
+    font-size: 13px;
+  }
+  
+  .title {
+    font-size: 32px;
+  }
+  
+  .message {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .register-page {
+    padding: 10px;
+    padding-top: 60px;
+  }
+  
+  .register-container {
+    padding: 16px 12px;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+  
+  .register-header h2 {
+    font-size: 20px;
+  }
+  
+  .back-button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .form-group label {
+    font-size: 13px;
+  }
+  
+  .form-group input {
+    padding: 8px 12px;
+    font-size: 14px;
   }
 }
