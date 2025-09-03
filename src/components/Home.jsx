@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBell, FaFileAlt } from "react-icons/fa";
+import { FaBell, FaFileAlt, FaBars, FaTimes } from "react-icons/fa";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Home.css";
@@ -9,6 +9,8 @@ import axios from "axios";
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [reminders, setReminders] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const navigate = useNavigate();
 
   // 🔐 Redirige al login si no hay token
@@ -29,6 +31,20 @@ const Home = () => {
     return () => window.removeEventListener("popstate", preventBack);
   }, []);
 
+  // 📱 Detectar cambio de tamaño de pantalla
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      // Cerrar menú al cambiar a desktop
+      if (window.innerWidth > 768) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // 📥 Traer recordatorios desde el backend
   useEffect(() => {
     const fetchReminders = async () => {
@@ -46,34 +62,29 @@ const Home = () => {
 
   // 🔎 Helpers para comparar SOLO la fecha (YYYY-MM-DD), ignorando horas/zona
   const toISODate = (date) => {
-    // Normaliza a medianoche local y luego toma la parte de fecha
     const localMidnight = new Date(
       date.getFullYear(),
       date.getMonth(),
       date.getDate()
     );
-    return localMidnight.toISOString().slice(0, 10); // "YYYY-MM-DD"
+    return localMidnight.toISOString().slice(0, 10);
   };
 
   const getReminderISODate = (rem) => {
-    // Soporta tanto "fecha" (correcto) como "Fecha" (por si quedaron registros viejos)
     const raw = rem.fecha || rem.Fecha;
     if (!raw) return null;
 
-    // raw suele venir como string ISO de Mongo. Tomamos solo "YYYY-MM-DD".
     if (typeof raw === "string") {
-      // Si ya es ISO, esto funciona; si viniera en otro formato, caemos al new Date(...)
       if (raw.length >= 10) return raw.slice(0, 10);
       const d = new Date(raw);
       return isNaN(d) ? null : d.toISOString().slice(0, 10);
     } else {
-      // Si viniera como Date
       const d = new Date(raw);
       return isNaN(d) ? null : d.toISOString().slice(0, 10);
     }
   };
 
-  // 📌 Filtrar recordatorios por fecha seleccionada (comparación por YYYY-MM-DD)
+  // 📌 Filtrar recordatorios por fecha seleccionada
   const selectedISO = toISODate(selectedDate);
   const filteredReminders = reminders.filter((rem) => {
     const remISO = getReminderISODate(rem);
@@ -89,22 +100,54 @@ const Home = () => {
     window.location.reload();
   };
 
+  // 📱 Toggle del menú hamburguesa
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Encabezado */}
-      <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md">
-        <h1 className="text-xl font-bold">Mi Control Médico</h1>
-        {/* Boton de perfil */} 
-      <div className="button-group">
-        <button className="button-profile" onClick={() => navigate("/profile")}>
-          Mi Perfil
-        </button>
-        {/* Boton de cerrar sesion */} 
-        <button className="button-close" onClick={handleLogout}>
-          Cerrar Sesión
-        </button>
-      </div>
+      <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md main-header">
+        <h1 className="text-xl font-bold control">Mi Control Médico</h1>
+        
+        {/* Botón de menú hamburguesa (solo móviles) */}
+        {isMobile && (
+          <button className="hamburger-btn" onClick={toggleMenu}>
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        )}
+        
+        {/* Grupo de botones (escritorio) */}
+        {!isMobile && (
+          <div className="button-group desktop-buttons">
+            <button className="button-profile" onClick={() => navigate("/profile")}>
+              Mi Perfil
+            </button>
+            <button className="button-close" onClick={handleLogout}>
+              Cerrar Sesión
+            </button>
+          </div>
+        )}
       </header>
+      
+      {/* Menú móvil (solo se muestra en móviles cuando está abierto) */}
+      {isMobile && (
+        <div className={`mobile-menu ${isMenuOpen ? 'mobile-menu-open' : ''}`}>
+          <button 
+            className="mobile-menu-btn" 
+            onClick={() => { navigate("/profile"); setIsMenuOpen(false); }}
+          >
+            Mi Perfil
+          </button>
+          <button 
+            className="mobile-menu-btn" 
+            onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      )}
 
       {/* Calendario */}
       <section className="bg-gray-100 p-4 my-6 rounded-lg text-center shadow-sm">
@@ -153,7 +196,7 @@ const Home = () => {
             className="bg-gray-200 hover:bg-gray-300 transition p-4 rounded-lg text-center cursor-pointer shadow"
             onClick={() => navigate("/reminder")}
           >
-            <FaBell className="text-3xl mx-auto text-blue-600" />
+            <FaBell className="text-3xl mx-auto text-blue-600 bell-icon" />
             <h3 className="font-bold mt-2">Recordatorios</h3>
             <p className="text-sm text-gray-600">Para medicación, pastillas, etc.</p>
           </div>
