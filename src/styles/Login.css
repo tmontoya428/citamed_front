@@ -132,3 +132,90 @@ html, body {
   margin-bottom: 20px;
   text-align: center;
 }
+
+/* Estilos responsivos - se agregan al final sin modificar los originales */
+@media (max-width: 1024px) {
+  .login-box {
+    padding: 40px;
+  }
+  
+  .title {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+  
+  .image-container, .login-container {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .image-container {
+    order: 2;
+    padding: 20px 0;
+  }
+  
+  .login-container {
+    order: 1;
+  }
+  
+  .login-image {
+    max-width: 300px;
+  }
+  
+  .login-box {
+    width: 90%;
+    padding: 30px;
+    margin: 0 auto;
+  }
+  
+  .title {
+    font-size: 36px;
+  }
+  
+  .login-box h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-box {
+    padding: 25px 20px;
+    width: 95%;
+  }
+  
+  .title {
+    font-size: 32px;
+  }
+  
+  .login-box h2 {
+    font-size: 18px;
+  }
+  
+  .login-box input {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .login-box button {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .login-box p {
+    font-size: 14px;
+  }
+  
+  /* Ajustes para el captcha en móviles */
+  .captcha-container > div {
+    transform: scale(0.9);
+    transform-origin: center;
+  }
+}

@@ -104,7 +104,7 @@ function Login() {
           <h2>INICIO DE SESIÓN</h2>
 
           <form onSubmit={handleLogin}>
-            <div>
+            <div className="input-group">
               <label htmlFor="usuario">Usuario:</label>
               <input
                 type="text"
@@ -116,7 +116,7 @@ function Login() {
               />
             </div>
 
-            <div>
+            <div className="input-group">
               <label htmlFor="password">Contraseña:</label>
               <input
                 type="password"
@@ -129,11 +129,13 @@ function Login() {
             </div>
 
             {/* CAPTCHA */}
-            <ReCAPTCHA
-              sitekey={SITE_KEY}
-              onChange={(token) => setCaptchaToken(token)}
-              className="captcha-box"
-            />
+            <div className="captcha-container">
+              <ReCAPTCHA
+                sitekey={SITE_KEY}
+                onChange={(token) => setCaptchaToken(token)}
+                className="captcha-box"
+              />
+            </div>
 
             <button type="submit">Iniciar Sesión</button>
           </form>
