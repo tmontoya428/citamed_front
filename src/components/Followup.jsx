@@ -19,7 +19,7 @@ const Followup = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Ordenar por fecha ascendente
+      // Ordenar por fecha descendente
       const sortedReminders = res.data.sort((a, b) => {
         const fechaA = new Date(a.fecha).getTime();
         const fechaB = new Date(b.fecha).getTime();
