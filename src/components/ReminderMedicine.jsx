@@ -46,7 +46,6 @@ function ReminderMedicine() {
       <div className="reminder-medicine-content">
         <div className="reminder-banner">
           <h2>Crear recordatorio de Medicamentos</h2>
-          <button className="reminder-close-btn" onClick={handleBack}>✕</button>
         </div>
         <form className="reminder-form" onSubmit={handleNext}>
           <label className="reminder-label">Medicamento</label>

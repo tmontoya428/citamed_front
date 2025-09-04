@@ -14,7 +14,7 @@ function Login() {
   const [captchaToken, setCaptchaToken] = useState(null);
   const navigate = useNavigate();
 
-  // Fondo
+  // Fondo de login
   useEffect(() => {
     document.body.classList.add("login-background");
     return () => {
@@ -104,7 +104,7 @@ function Login() {
           <h2>INICIO DE SESIÓN</h2>
 
           <form onSubmit={handleLogin}>
-            <div>
+            <div className="input-group">
               <label htmlFor="usuario">Usuario:</label>
               <input
                 type="text"
@@ -116,7 +116,7 @@ function Login() {
               />
             </div>
 
-            <div>
+            <div className="input-group">
               <label htmlFor="password">Contraseña:</label>
               <input
                 type="password"
@@ -128,19 +128,22 @@ function Login() {
               />
             </div>
 
-            {/* 🔹 CAPTCHA */}
-            <ReCAPTCHA
-              sitekey={SITE_KEY}
-              onChange={(token) => setCaptchaToken(token)}
-              className="captcha-box"
-            />
+            {/* CAPTCHA */}
+            <div className="captcha-container">
+              <ReCAPTCHA
+                sitekey={SITE_KEY}
+                onChange={(token) => setCaptchaToken(token)}
+                className="captcha-box"
+              />
+            </div>
 
             <button type="submit">Iniciar Sesión</button>
           </form>
 
           {error && <p className="error-message">{error}</p>}
 
-          <p>¿Olvidaste tu contraseña?</p>
+          {/* 🔹 Mantengo los enlaces de la versión anterior */}
+         {/*<p>¿Olvidaste tu contraseña?</p>*/}
           <p>
             ¿Aún no estás registrado? <a href="/register">Registrarse</a>
           </p>

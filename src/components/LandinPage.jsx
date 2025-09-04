@@ -1,14 +1,13 @@
 import { Link } from "react-router-dom";
 import "../styles/LandinPage.css"
 
-
 const LandingPage = () => {
   return (
     <div className="container">
       {/* Barra de navegación */}
       <nav>
         <h1>CITAMED</h1>
-        <div>
+        <div className="nav-buttons">
           <Link to="/login" className="btn-nav">Iniciar Sesión</Link>
           <Link to="/register" className="btn-nav">Registrarse</Link>
         </div>

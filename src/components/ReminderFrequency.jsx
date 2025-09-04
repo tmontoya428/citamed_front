@@ -88,7 +88,6 @@ function ReminderFrequency() {
       <div className="frequency-box">
         <div className="frequency-title-bar">
           <h2>Crear recordatorio de Medicamentos</h2>
-          <button className="reminder-close-btn" onClick={handleBack}>✕</button>
         </div>
         <div className="frequency-content">
           <h3>Selecciona la frecuencia del recordatorio</h3>

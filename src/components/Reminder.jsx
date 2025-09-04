@@ -136,11 +136,11 @@ const Reminder = () => {
       </div>
 
       <nav className="bottom-nav">
-        <button className="back-button" onClick={() => navigate("/home")}><FaArrowLeft /></button>
+        <button className="nav-button" onClick={() => navigate("/home")}><FaArrowLeft /> Return</button>
         <h1>RECORDATORIOS</h1>
         <button className="nav-button" onClick={() => navigate("/home")}><FaCalendarAlt /> Calendar</button>
-        <button className="nav-button" onClick={() => navigate("/reminder")}><FaHistory /> Records</button>
-        <button className="nav-button" onClick={() => navigate("/home")}><FaArrowLeft /> Return</button>
+        
+        
       </nav>
     </div>
   );
