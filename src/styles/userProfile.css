@@ -348,3 +348,47 @@ body {
 .profile-container::-webkit-scrollbar-thumb:hover {
   background: var(--primary-dark);
 }
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.menu-container {
+  position: relative;
+}
+
+.menu-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #5a4fcf;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background: white;
+  border: 1px solid #5a4fcf;
+  border-radius: 6px;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.15);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-dropdown button {
+  padding: 15px;
+  background: none;
+  color: black;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.menu-dropdown button:hover {
+  background: #978dff2a;
+}

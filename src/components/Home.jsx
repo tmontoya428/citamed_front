@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBell, FaFileAlt, FaBars, FaTimes } from "react-icons/fa";
+import { FaBell, FaFileAlt, FaBars, FaTimes, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Home.css";
@@ -122,10 +122,10 @@ const Home = () => {
         {!isMobile && (
           <div className="button-group desktop-buttons">
             <button className="button-profile" onClick={() => navigate("/profile")}>
-              Mi Perfil
+              <FaUserCircle size={24} />
             </button>
             <button className="button-close" onClick={handleLogout}>
-              Cerrar Sesión
+              <FaSignOutAlt size={28} />
             </button>
           </div>
         )}

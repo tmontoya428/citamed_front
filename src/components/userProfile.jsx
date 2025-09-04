@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaEllipsisV } from "react-icons/fa"; // 🔹 Icono de tres puntos
 import '../styles/userProfile.css'
 
 export default function Profile() {
   const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false); 
+  const [menuOpen, setMenuOpen] = useState(false); // 🔹 Estado para mostrar/ocultar menú
   const token = localStorage.getItem("token");
 
-  // 🔹 Obtener info del usuario al cargar el componente
+  const navigate = useNavigate();
+
+  // 🔹 Obtener info del usuario
   useEffect(() => {
     const fetchInfo = async () => {
       try {
@@ -26,12 +30,10 @@ export default function Profile() {
     if (token) fetchInfo();
   }, [token]);
 
-  // 🔹 Manejar cambios en los inputs
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🔹 Guardar cambios en el backend
   const handleSave = async () => {
     try {
       const res = await axios.put("http://localhost:5000/api/info-user", formData, {
@@ -46,16 +48,34 @@ export default function Profile() {
     }
   };
 
-  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   if (loading) return <p>Cargando...</p>;
   if (!formData) return <p>No hay información de usuario</p>;
 
   return (
     <div className="profile-container">
-      <h2>Mi Perfil</h2>
+      {/* 🔹 Encabezado con menú */}
+      <div className="profile-header">
+        <h2>Mi Perfil</h2>
+        <div className="menu-container">
+          <FaEllipsisV
+            className="menu-icon"
+            onClick={() => setMenuOpen(!menuOpen)}
+          />
+          {menuOpen && (
+            <div className="menu-dropdown">
+              <button onClick={() => setIsEditing(true)}>Editar</button>
+              <button onClick={handleLogout}>Cerrar sesión</button>
+            </div>
+          )}
+        </div>
+      </div>
 
-      {/* Nombre */}
+      {/* Campos */}
       <div className="field">
         <label>Nombre</label>
         {isEditing ? (
@@ -70,7 +90,6 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Apellido */}
       <div className="field">
         <label>Apellido</label>
         {isEditing ? (
@@ -85,7 +104,6 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Fecha de nacimiento */}
       <div className="field">
         <label>Fecha de nacimiento</label>
         {isEditing ? (
@@ -100,7 +118,6 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Teléfono */}
       <div className="field">
         <label>Teléfono</label>
         {isEditing ? (
@@ -115,7 +132,6 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Correo */}
       <div className="field">
         <label>Correo</label>
         {isEditing ? (
@@ -130,7 +146,7 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Botones */}
+      {/* Botones de acción */}
       <div className="actions">
         {isEditing ? (
           <>
@@ -141,11 +157,7 @@ export default function Profile() {
               Cancelar
             </button>
           </>
-        ) : (
-          <button onClick={() => setIsEditing(true)} className="btn btn-edit">
-            Editar
-          </button>
-        )}
+        ) : null}
         <button className="btn btn-edit" onClick={() => navigate("/home")}>
           Volver
         </button>

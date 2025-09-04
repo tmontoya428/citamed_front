@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 import "../styles/Login.css";
 import loginImage from "../assets/imagencitamed.jpg";
 
@@ -13,6 +14,8 @@ function Login() {
   const [error, setError] = useState("");
   const [captchaToken, setCaptchaToken] = useState(null);
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   // Fondo de login
   useEffect(() => {
@@ -115,18 +118,26 @@ function Login() {
                 required
               />
             </div>
-
-            <div className="input-group">
-              <label htmlFor="password">Contraseña:</label>
+            
+          <div className="input-group password-group">
+            <label htmlFor="password">Contraseña:</label>
+            <div className="password-wrapper">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"} // 👁️ cambia el tipo
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="********"
                 required
               />
+              <span
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
+          </div>
 
             {/* CAPTCHA */}
             <div className="captcha-container">
