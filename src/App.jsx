@@ -12,6 +12,8 @@ import ReminderMedicine from './components/ReminderMedicine';
 import ReminderFrequency from './components/ReminderFrequency';
 import ReminderCreated from './components/ReminderCreated';
 import UserProfile from "./components/userProfile";
+import ForgotPassword from "./components/ForgotPassword";   // 🔹 Nuevo
+import ResetPassword from "./components/ResetPassword";     // 🔹 Nuevo
 
 import './App.css';
 
@@ -57,6 +59,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/register-admin" element={<RegisterAdmin />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           {/* Redirección lógica del dashboard */}
           <Route
