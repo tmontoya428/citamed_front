@@ -218,9 +218,6 @@ html, body {
     transform: scale(0.9);
     transform-origin: center;
   }
-<<<<<<< HEAD
-}
-=======
 }
 
 /* ojito */
@@ -247,4 +244,3 @@ html, body {
 .toggle-password:hover {
   color: #333;
 }
->>>>>>> 1efd851bf05d876d069d0ea49d912525da741207
