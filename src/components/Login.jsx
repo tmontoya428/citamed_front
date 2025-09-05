@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 import "../styles/Login.css";
 import loginImage from "../assets/imagencitamed.jpg";
 
@@ -13,6 +14,8 @@ function Login() {
   const [error, setError] = useState("");
   const [captchaToken, setCaptchaToken] = useState(null);
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   // Fondo
   useEffect(() => {
@@ -104,7 +107,7 @@ function Login() {
           <h2>INICIO DE SESIÓN</h2>
 
           <form onSubmit={handleLogin}>
-            <div>
+            <div className="input-group">
               <label htmlFor="usuario">Usuario:</label>
               <input
                 type="text"
@@ -115,25 +118,35 @@ function Login() {
                 required
               />
             </div>
-
-            <div>
-              <label htmlFor="password">Contraseña:</label>
+            
+          <div className="input-group password-group">
+            <label htmlFor="password">Contraseña:</label>
+            <div className="password-wrapper">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"} // 👁️ cambia el tipo
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="********"
                 required
               />
+              <span
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
+          </div>
 
-            {/* 🔹 CAPTCHA */}
-            <ReCAPTCHA
-              sitekey={SITE_KEY}
-              onChange={(token) => setCaptchaToken(token)}
-              className="captcha-box"
-            />
+            {/* CAPTCHA */}
+            <div className="captcha-container">
+              <ReCAPTCHA
+                sitekey={SITE_KEY}
+                onChange={(token) => setCaptchaToken(token)}
+                className="captcha-box"
+              />
+            </div>
 
             <button type="submit">Iniciar Sesión</button>
           </form>
