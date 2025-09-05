@@ -87,7 +87,7 @@ const Home = () => {
   // 📌 Filtrar recordatorios por fecha seleccionada
   const selectedISO = toISODate(selectedDate);
   const filteredReminders = reminders.filter((rem) => {
-    const remISO = getReminderDate(rem);
+    const remISO = getReminderISODate(rem);
     return remISO === selectedISO;
   });
 
@@ -172,9 +172,7 @@ const Home = () => {
               >
                 <div>
                   <h3 className="font-bold">{rem.titulo}</h3>
-                  <p className="text-sm text-gray-600">
-                    Descripción: {rem.descripcion}
-                  </p>
+                  <p className="text-sm text-gray-600"> Descripción: {rem.descripcion}</p>
                   <span className="text-xs text-blue-500">
                     Frecuencia: {rem.frecuencia}
                   </span>
@@ -200,9 +198,7 @@ const Home = () => {
           >
             <FaBell className="text-3xl mx-auto text-blue-600 bell-icon" />
             <h3 className="font-bold mt-2">Recordatorios</h3>
-            <p className="text-sm text-gray-600">
-              Para medicación, pastillas, etc.
-            </p>
+            <p className="text-sm text-gray-600">Para medicación, pastillas, etc.</p>
           </div>
 
           <div
@@ -211,9 +207,7 @@ const Home = () => {
           >
             <FaFileAlt className="text-3xl mx-auto text-green-600" />
             <h3 className="font-bold mt-2">Seguimiento a paciente</h3>
-            <p className="text-sm text-gray-600">
-              Cumplimiento de tratamiento
-            </p>
+            <p className="text-sm text-gray-600">Cumplimiento de tratamiento</p>
           </div>
         </div>
       </section>
