@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBell, FaFileAlt } from "react-icons/fa";
+import { FaBell, FaFileAlt, FaBars, FaTimes, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Home.css";
@@ -9,6 +9,8 @@ import axios from "axios";
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [reminders, setReminders] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const navigate = useNavigate();
 
   // 🔐 Redirige al login si no hay token
@@ -27,6 +29,20 @@ const Home = () => {
     window.history.pushState(null, "", window.location.href);
     window.addEventListener("popstate", preventBack);
     return () => window.removeEventListener("popstate", preventBack);
+  }, []);
+
+  // 📱 Detectar cambio de tamaño de pantalla
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      // Cerrar menú al cambiar a desktop
+      if (window.innerWidth > 768) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // 📥 Traer recordatorios desde el backend
@@ -77,20 +93,54 @@ const Home = () => {
     window.location.reload();
   };
 
+  // 📱 Toggle del menú hamburguesa
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Encabezado */}
-      <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md">
-        <h1 className="text-xl font-bold">Mi Control Médico</h1>
-        <div className="button-group">
-          <button className="button-profile" onClick={() => navigate("/profile")}>
+      <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md main-header">
+        <h1 className="text-xl font-bold control">Mi Control Médico</h1>
+        
+        {/* Botón de menú hamburguesa (solo móviles) */}
+        {isMobile && (
+          <button className="hamburger-btn" onClick={toggleMenu}>
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        )}
+        
+        {/* Grupo de botones (escritorio) */}
+        {!isMobile && (
+          <div className="button-group desktop-buttons">
+            <button className="button-profile" onClick={() => navigate("/profile")}>
+              <FaUserCircle size={24} />
+            </button>
+            <button className="button-close" onClick={handleLogout}>
+              <FaSignOutAlt size={28} />
+            </button>
+          </div>
+        )}
+      </header>
+      
+      {/* Menú móvil (solo se muestra en móviles cuando está abierto) */}
+      {isMobile && (
+        <div className={`mobile-menu ${isMenuOpen ? 'mobile-menu-open' : ''}`}>
+          <button 
+            className="mobile-menu-btn" 
+            onClick={() => { navigate("/profile"); setIsMenuOpen(false); }}
+          >
             Mi Perfil
           </button>
-          <button className="button-close" onClick={handleLogout}>
+          <button 
+            className="mobile-menu-btn" 
+            onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+          >
             Cerrar Sesión
           </button>
         </div>
-      </header>
+      )}
 
       {/* Calendario */}
       <section className="bg-gray-100 p-4 my-6 rounded-lg text-center shadow-sm">
@@ -141,7 +191,7 @@ const Home = () => {
             className="bg-gray-200 hover:bg-gray-300 transition p-4 rounded-lg text-center cursor-pointer shadow"
             onClick={() => navigate("/reminder")}
           >
-            <FaBell className="text-3xl mx-auto text-blue-600" />
+            <FaBell className="text-3xl mx-auto text-blue-600 bell-icon" />
             <h3 className="font-bold mt-2">Recordatorios</h3>
             <p className="text-sm text-gray-600">
               Para medicación, pastillas, etc.

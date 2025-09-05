@@ -9,7 +9,8 @@ import {
   FaUsers, 
   FaPills, 
   FaTimes, 
-  FaTrash 
+  FaTrash,
+  FaBars 
 } from "react-icons/fa";
 import axios from "axios";
 
@@ -17,9 +18,14 @@ const Reminder = () => {
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   const [reminders, setReminders] = useState([]);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const toggleOptions = () => setShowOptions(!showOptions);
-  const irARecordatorio = () => navigate("/create-reminder");
+  const toggleMobileMenu = () => setShowMobileMenu(!showMobileMenu);
+  const irARecordatorio = () => {
+    navigate("/create-reminder");
+    setShowMobileMenu(false);
+  };
 
   useEffect(() => {
     fetchReminders();
@@ -32,11 +38,10 @@ const Reminder = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // 🔹 Ordenar por fecha ascendente
       const sortedReminders = res.data.sort((a, b) => {
         const fechaA = new Date(a.fecha).getTime();
         const fechaB = new Date(b.fecha).getTime();
-        return fechaB - fechaA; // Ascendente (más antiguo → más nuevo)
+        return fechaB - fechaA;
       });
 
       setReminders(sortedReminders);
@@ -52,12 +57,11 @@ const Reminder = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Filtramos y volvemos a ordenar
       const updatedReminders = reminders.filter((r) => r._id !== id);
       const sortedReminders = updatedReminders.sort((a, b) => {
         const fechaA = new Date(a.fecha).getTime();
         const fechaB = new Date(b.fecha).getTime();
-        return fechaA - fechaB;
+        return fechaA - b;
       });
 
       setReminders(sortedReminders);
@@ -68,6 +72,33 @@ const Reminder = () => {
 
   return (
     <div className="container">
+      {/* Navegación superior fija */}
+      <nav className="top-nav">
+        <button className="nav-button" onClick={() => navigate("/home")}>
+          <FaArrowLeft />
+        </button>
+        <h1>RECORDATORIOS</h1>
+        
+        {/* Botón de menú hamburguesa para móviles - POSICIONADO ARRIBA A LA DERECHA */}
+        <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+          <FaBars />
+        </button>
+        
+        <div className={`nav-buttons-group ${showMobileMenu ? 'mobile-menu-open' : ''}`}>
+          <button className="nav-button" onClick={() => {navigate("/home"); setShowMobileMenu(false);}}>
+            <FaCalendarAlt /> <span className="nav-button-text">Calendario</span>
+          </button>
+          <button className="nav-button active" onClick={() => setShowMobileMenu(false)}>
+            <FaHistory /> <span className="nav-button-text">Records</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Overlay para cerrar menú al hacer clic fuera */}
+      {showMobileMenu && (
+        <div className="mobile-menu-overlay" onClick={toggleMobileMenu}></div>
+      )}
+
       <main className="main-content">
         {reminders.length === 0 ? (
           <p className="no-data">No hay recordatorios</p>
@@ -80,7 +111,6 @@ const Reminder = () => {
                   <small><b>Descripción:</b> {reminder.descripcion}</small>
                   <small><b>Frecuencia:</b> {reminder.frecuencia}</small>
 
-                  {/* Mostrar horarios */}
                   {reminder.horarios && reminder.horarios.length > 0 ? (
                     reminder.horarios.map((horaStr, index) => (
                       <div key={index} className="horario-item">
@@ -125,7 +155,7 @@ const Reminder = () => {
             <button className="fab-option" onClick={irARecordatorio}>
               <FaUsers /> Recordatorio de control
             </button>
-            <button className="fab-option" onClick={() => navigate("/reminder-medicine")}>
+            <button className="fab-option" onClick={() => {navigate("/reminder-medicine"); setShowMobileMenu(false);}}>
               <FaPills /> Recordatorio de medicamentos
             </button>
           </div>
@@ -134,14 +164,6 @@ const Reminder = () => {
           {showOptions ? <FaTimes /> : <FaPlus />}
         </button>
       </div>
-
-      <nav className="bottom-nav">
-        <button className="nav-button" onClick={() => navigate("/home")}><FaArrowLeft /> Return</button>
-        <h1>RECORDATORIOS</h1>
-        <button className="nav-button" onClick={() => navigate("/home")}><FaCalendarAlt /> Calendar</button>
-        
-        
-      </nav>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+/* ESTILOS ORIGINALES (se mantienen intactos) */
 /* Estilos generales */
 body {
   font-family: Arial, sans-serif;
@@ -35,6 +36,7 @@ header {
   font-size: 1.2rem;
   height: 50px;
   max-height: 50px;
+  z-index: 1000;
 }
 
 .control { /* h1 del titulo */
@@ -188,7 +190,7 @@ header {
   font-size: 35px;
   color: #fafafa;
   display: block;
-  margin: 0 auto 10px auto; /* solo espacio inferior, sin margen negativo */
+  margin: 0 auto 10px auto; /* solo espacio inferior, sans margen negativo */
   filter: drop-shadow(1px 1px 0px #000) 
           drop-shadow(-1px -1px 0px #000) 
           drop-shadow(1px -1px 0px #000) 
@@ -235,6 +237,16 @@ header {
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s ease;
+
+  /* 🔽 Aquí el tamaño del botón */
+  width: 80px;
+  height: 60px;
+
+  /* Centrar el ícono */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px; /* Hace crecer el ícono si no usas size en FaUserCircle */
 }
 
 /* Hover/Focus */
@@ -305,82 +317,6 @@ img {
   max-width: 100%;
 }
 
-/* Ajustes generales para pantallas pequeñas- rESPONSIVIDAD */
-@media (max-width: 1024px) {
-  .max-w-4xl {
-    padding: 20px;
-  }
-
-  .control { /* Tamaño del título en pantallas medianas */
-    font-size: 3rem;
-  }
-
-  .react-calendar {
-    max-width: 100%;
-    padding: 30px;
-  }
-}
-
-/* Para tablets y pantallas más pequeñas */
-@media (max-width: 768px) {
-  body {
-    padding-top: 100px;
-  }
-
-  .control {
-    font-size: 2.5rem;
-  }
-
-  .grid { /* Cambiar a una sola columna en dispositivos pequeños */
-    grid-template-columns: 1fr;
-  }
-
-  .bg-gray-200, .texto {
-    font-size: 1.2rem;
-    padding: 15px;
-  }
-
-  .resumen-container {
-    font-size: 1rem;
-    padding: 15px;
-  }
-}
-
-/* Para móviles */
-@media (max-width: 480px) {
-  body {
-    padding-top: 80px;
-  }
-
-  .control {
-    font-size: 2rem;
-  }
-
-  header {
-    font-size: 1rem;
-    height: 50px;
-  }
-
-  .react-calendar__tile {
-    font-size: 0.8rem;
-    padding: 5px;
-  }
-
-  .recordatorio {
-    font-size: 1rem;
-    height: 40px;
-  }
-
-  .resumen-container h2 {
-    font-size: 1.5rem;
-  }
-
-  img {
-    width: 100%;
-  }
-}
-
-
 /* Resumen Médico  tarjeticas dentro*/
 .resumen-container {
   background-color: white;
@@ -449,4 +385,206 @@ img {
   display: flex;
   flex-direction: column;
   text-align: center;
+}
+
+.button-profile {
+  padding: 10px;
+  background: #7f86d4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  /* 🔽 Aquí el tamaño del botón */
+  width: 60px;
+  height: 60px;
+
+  /* Centrar el ícono */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px; /* Hace crecer el ícono si no usas size en FaUserCircle */
+}
+
+
+/* NUEVOS ESTILOS PARA EL MENÚ HAMBURGUESA (se añaden al final) */
+
+/* Botón hamburguesa (oculto en desktop) */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 5px 10px;
+  z-index: 1001;
+}
+
+/* Menú móvil (oculto por defecto) */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 50px;
+  right: -200px;
+  background: #7f86d4;
+  width: 200px;
+  z-index: 1000;
+  border-radius: 0 0 0 10px;
+  box-shadow: -2px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: right 0.3s ease;
+}
+
+.mobile-menu-open {
+  right: 0;
+}
+
+.mobile-menu-btn {
+  padding: 15px;
+  background: #7f86d4;
+  color: white;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu-btn:hover {
+  background: #6e78e0;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 1024px) {
+  .max-w-4xl {
+    padding: 20px;
+  }
+
+  .control {
+    font-size: 3rem;
+  }
+
+  .react-calendar {
+    max-width: 100%;
+    padding: 30px;
+  }
+}
+
+/* Para tablets y pantallas más pequeñas */
+@media (max-width: 768px) {
+  body {
+    padding-top: 100px;
+  }
+
+  .control {
+    font-size: 2.5rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bg-gray-200, .texto {
+    font-size: 1.2rem;
+    padding: 15px;
+  }
+
+  .resumen-container {
+    font-size: 1rem;
+    padding: 15px;
+  }
+  
+  /* Mostrar botón hamburguesa y ocultar botones normales */
+  .desktop-buttons {
+    display: none !important;
+  }
+  
+  .hamburger-btn {
+    display: block !important;
+  }
+  
+  /* Mostrar menú móvil */
+  .mobile-menu {
+    display: flex !important;
+  }
+}
+
+/* Para móviles */
+@media (max-width: 480px) {
+  body {
+    padding-top: 80px;
+  }
+
+  .control {
+    font-size: 2rem;
+  }
+
+  header {
+    font-size: 1rem;
+    height: 50px;
+  }
+
+  .react-calendar__tile {
+    font-size: 0.8rem;
+    padding: 5px;
+  }
+
+  .recordatorio {
+    font-size: 1rem;
+    height: 40px;
+  }
+
+  .resumen-container h2 {
+    font-size: 1.5rem;
+  }
+
+  img {
+    width: 100%;
+  }
+  
+  .mobile-menu {
+    width: 180px;
+  }
+  
+  .mobile-menu-btn {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Para móviles muy pequeños */
+@media (max-width: 360px) {
+  .control {
+    font-size: 1.7rem;
+  }
+  
+  .mobile-menu {
+    width: 160px;
+  }
+  
+  .mobile-menu-btn {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Para dispositivos con altura muy pequeña */
+@media (max-height: 600px) {
+  body {
+    padding-top: 90px;
+  }
+  
+  .max-w-4xl {
+    padding: 15px;
+  }
+  
+  .mobile-menu {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 }

@@ -218,4 +218,33 @@ html, body {
     transform: scale(0.9);
     transform-origin: center;
   }
+<<<<<<< HEAD
 }
+=======
+}
+
+/* ojito */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px; /* espacio para el ícono */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.2rem;
+  height: 60%; /*  centra verticalmente el ojito*/
+}
+
+.toggle-password:hover {
+  color: #333;
+}
+>>>>>>> 1efd851bf05d876d069d0ea49d912525da741207
