@@ -101,8 +101,13 @@ const Home = () => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Encabezado */}
-      <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md main-header">
-        <h1 className="text-xl font-bold control">Mi Control Médico</h1>
+      <header className="main-header">
+        <img 
+          src="/public/Logo citamed.png" 
+          alt="Seguimiento y cumplimiento" 
+          className="milogo" 
+        />
+        <h1 className="control"></h1>
         
         {/* Botón de menú hamburguesa (solo móviles) */}
         {isMobile && (

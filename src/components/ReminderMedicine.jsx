@@ -41,7 +41,11 @@ function ReminderMedicine() {
     <>
       <nav className="bottom">
         <button className="nav-button" onClick={handleBack}><FaArrowLeft /></button>
-        <h1>CITAMED</h1>
+        <img 
+          src="/public/Logo citamed.png" 
+          alt="Seguimiento y cumplimiento" 
+          className="milogo-medicine" 
+        />
       </nav>
       <div className="reminder-medicine-content">
         <div className="reminder-banner">

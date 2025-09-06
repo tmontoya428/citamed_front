@@ -77,6 +77,11 @@ const Reminder = () => {
         <button className="nav-button" onClick={() => navigate("/home")}>
           <FaArrowLeft />
         </button>
+        <img 
+          src="/public/Logo citamed.png" 
+          alt="Seguimiento y cumplimiento" 
+          className="milogo" 
+        />
         <h1>RECORDATORIOS</h1>
         
         {/* Botón de menú hamburguesa para móviles - POSICIONADO ARRIBA A LA DERECHA */}

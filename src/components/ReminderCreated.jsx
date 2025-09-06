@@ -20,7 +20,11 @@ function ReminderCreated() {
         <button className="nav-button" onClick={handleBack}>
           <FaArrowLeft />
         </button>
-        <h1>CITAMED</h1>
+        <img 
+          src="/public/Logo citamed.png" 
+          alt="Seguimiento y cumplimiento" 
+          className="milogo-medicine" 
+        />
       </nav>
 
       <main className="created-content">
