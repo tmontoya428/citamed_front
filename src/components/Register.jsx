@@ -29,17 +29,48 @@ function Register() {
             ...formData,
             [e.target.name]: e.target.value
         });
-        // Clear message when user starts typing
         if (message) setMessage('');
     };
+
+    // --- Indicador de seguridad ---
+    const getPasswordStrength = (password) => {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+        return strength;
+    };
+    const strength = getPasswordStrength(formData.password);
 
     const validateForm = () => {
         if (!formData.name.trim()) {
             setMessage('Por favor, ingresa tu nombre');
             return false;
         }
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(formData.name)) {
+        setMessage('El nombre solo puede contener letras y espacios');
+        return false;
+        }
         if (!formData.lastName.trim()) {
             setMessage('Por favor, ingresa tu apellido');
+            return false;
+        }
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(formData.lastName)) {
+        setMessage('El apellido solo puede contener letras y espacios');
+        return false;
+        }
+        if (!formData.birthdate.trim()) {
+            setMessage('Por favor, selecciona tu fecha de nacimiento');
+            return false;
+        }
+        if (!formData.phone.trim()) {
+            setMessage('Por favor, ingresa tu número de teléfono');
+            return false;
+        }
+        if (!/^\d+$/.test(formData.phone)) {
+            setMessage('El teléfono solo debe contener números');
             return false;
         }
         if (!formData.email.trim()) {
@@ -50,12 +81,32 @@ function Register() {
             setMessage('Por favor, ingresa un nombre de usuario');
             return false;
         }
+        if (/\s/.test(formData.username)) {
+            setMessage('El nombre de usuario no puede contener espacios');
+            return false;
+        }
         if (!formData.password.trim()) {
             setMessage('Por favor, ingresa una contraseña');
             return false;
         }
-        if (formData.password.length < 6) {
-            setMessage('La contraseña debe tener al menos 6 caracteres');
+        if (formData.password.length < 8) {
+            setMessage('La contraseña debe tener al menos 8 caracteres');
+            return false;
+        }
+        if (!/[A-Z]/.test(formData.password)) {
+            setMessage('La contraseña debe contener al menos una letra mayúscula');
+            return false;
+        }
+        if (!/[a-z]/.test(formData.password)) {
+            setMessage('La contraseña debe contener al menos una letra minúscula');
+            return false;
+        }
+        if (!/[0-9]/.test(formData.password)) {
+            setMessage('La contraseña debe contener al menos un número');
+            return false;
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+            setMessage('La contraseña debe contener al menos un carácter especial');
             return false;
         }
         return true;
@@ -64,9 +115,7 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (!validateForm()) {
-            return;
-        }
+        if (!validateForm()) return;
 
         setIsLoading(true);
         setMessage('');
@@ -74,9 +123,7 @@ function Register() {
         try {
             const response = await fetch('http://localhost:5000/api/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
 
@@ -84,9 +131,7 @@ function Register() {
 
             if (response.ok) {
                 setMessage('¡Registro exitoso! Redirigiendo a inicio de sesión...');
-                setTimeout(() => {
-                    navigate('/login');
-                }, 2000);
+                setTimeout(() => navigate('/login'), 2000);
             } else {
                 setMessage(data.msg || 'Error en el registro. Intenta nuevamente.');
             }
@@ -99,7 +144,6 @@ function Register() {
     };
 
     return (
-        
         <div className="register-page">
             <div className="back-button-container">
                 <Link to="/" className="back-button">← Volver</Link> 
@@ -148,17 +192,18 @@ function Register() {
 
                     <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="birthdate">Fecha de Nacimiento</label>
+                            <label htmlFor="birthdate">Fecha de Nacimiento *</label>
                             <input
                                 type="date"
                                 id="birthdate"
                                 name="birthdate"
                                 value={formData.birthdate}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="phone">Teléfono</label>
+                            <label htmlFor="phone">Teléfono *</label>
                             <input
                                 type="tel"
                                 id="phone"
@@ -166,6 +211,7 @@ function Register() {
                                 value={formData.phone}
                                 onChange={handleChange}
                                 placeholder="Ingresa tu teléfono"
+                                required
                             />
                         </div>
                     </div>
@@ -204,9 +250,25 @@ function Register() {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
-                            placeholder="Mínimo 6 caracteres"
+                            placeholder="Mínimo 8 caracteres, mayúscula, minúscula, número y símbolo"
                             required
                         />
+                        {/* Indicador de seguridad */}
+                        <div className="password-strength">
+                            <div className={`strength-bar ${strength >= 1 ? 'active' : ''}`} />
+                            <div className={`strength-bar ${strength >= 2 ? 'active' : ''}`} />
+                            <div className={`strength-bar ${strength >= 3 ? 'active' : ''}`} />
+                            <div className={`strength-bar ${strength >= 4 ? 'active' : ''}`} />
+                            <div className={`strength-bar ${strength >= 5 ? 'active' : ''}`} />
+                        </div>
+                        <p className="strength-text">
+                            {strength === 0 && "Muy débil"}
+                            {strength === 1 && "Muy débil"}
+                            {strength === 2 && "Débil"}
+                            {strength === 3 && "Aceptable"}
+                            {strength === 4 && "Fuerte"}
+                            {strength === 5 && "Muy fuerte"}
+                        </p>
                     </div>
 
                     <button 
