@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
@@ -13,9 +13,11 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [captchaToken, setCaptchaToken] = useState(null);
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
+  // 👇 Referencia al captcha
+  const captchaRef = useRef(null);
 
   // Fondo de login
   useEffect(() => {
@@ -79,13 +81,22 @@ function Login() {
         } catch (err) {
           console.error("❌ Token mal formado:", err.message);
           setError("Error al procesar el token de sesión.");
+          // 🔄 Resetear captcha si el token falla
+          captchaRef.current.reset();
+          setCaptchaToken(null);
         }
       } else {
         setError(data.msg || "Credenciales incorrectas.");
+        // 🔄 Resetear captcha si credenciales incorrectas
+        captchaRef.current.reset();
+        setCaptchaToken(null);
       }
     } catch (err) {
       console.error("❌ Error de conexión:", err.message);
       setError("No se pudo conectar con el servidor.");
+      // 🔄 Resetear captcha si hay error de conexión
+      captchaRef.current.reset();
+      setCaptchaToken(null);
     }
   };
 
@@ -119,31 +130,32 @@ function Login() {
               />
             </div>
             
-          <div className="input-group password-group">
-            <label htmlFor="password">Contraseña:</label>
-            <div className="password-wrapper">
-              <input
-                type={showPassword ? "text" : "password"} // 👁️ cambia el tipo
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="********"
-                required
-              />
-              <span
-                className="toggle-password"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+            <div className="input-group password-group">
+              <label htmlFor="password">Contraseña:</label>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="********"
+                  required
+                />
+                <span
+                  className="toggle-password"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
             </div>
-          </div>
 
             {/* CAPTCHA */}
             <div className="captcha-container">
               <ReCAPTCHA
                 sitekey={SITE_KEY}
                 onChange={(token) => setCaptchaToken(token)}
+                ref={captchaRef} // 👈 referencia para resetear
                 className="captcha-box"
               />
             </div>
@@ -153,8 +165,7 @@ function Login() {
 
           {error && <p className="error-message">{error}</p>}
 
-          {/* 🔹 Mantengo los enlaces de la versión anterior */}
-         <p>
+          <p>
             ¿Olvidaste tu contraseña?{" "}
             <a href="/forgot-password">Recupérala aquí</a>
           </p>
