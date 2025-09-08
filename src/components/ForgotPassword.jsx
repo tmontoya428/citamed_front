@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/ForgotPassword.css";
 
 function ForgotPassword() {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,6 +47,12 @@ function ForgotPassword() {
         />
         <button type="submit">Enviar correo</button>
       </form>
+      <button 
+      className="btn" 
+      onClick={() => navigate("/login")}
+      >
+        Volver a Login
+      </button>
       {message && <p className="success">{message}</p>}
       {error && <p className="error">{error}</p>}
     </div>
