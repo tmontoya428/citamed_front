@@ -78,7 +78,11 @@ const Remindercontrol = () => {
         <button className="nav-button" onClick={irAReminder}>
           <FaArrowLeft />
         </button>
-        <h1>CITAMED</h1>
+                <img 
+          src="/public/Logo citamed.png" 
+          alt="Seguimiento y cumplimiento" 
+          className="milogo-medicine" 
+        />
       </nav>
 
       <main>

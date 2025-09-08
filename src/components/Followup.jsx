@@ -63,6 +63,11 @@ const Followup = () => {
         <button className="followup-back" onClick={() => navigate("/home")}>
           <FaArrowLeft />
         </button>
+        <img 
+          src="/public/Logo citamed.png" 
+          alt="Seguimiento y cumplimiento" 
+          className="milogo" 
+        />
         <h1 className="followup-title">Seguimiento a paciente</h1>
       </header>
 

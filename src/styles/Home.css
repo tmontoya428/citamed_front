@@ -23,28 +23,37 @@ body {
   align-items: center;
 }
 
-/* Encabezado */
+
+.milogo {
+  height: 165px;   /* tamaño reducido */
+  width: auto;    /* mantiene proporción */
+  margin-right: 15px; /* espacio entre logo y texto */
+}
+
+/* Estilo del encabezado */
 header {
   width: 100%;
   display: flex;
+   padding: 0 20px 0 0px !important; /* arriba, derecha, abajo, izquierda */
   align-items: center;
   background-color: #7f86d4;
+  justify-content: flex-start; /* logo + texto alineados a la izquierda */
   color: white;
   position: fixed;
   top: 0;
   left: 0;
   font-size: 1.2rem;
-  height: 50px;
-  max-height: 50px;
+  height: 60px;
+  padding: 0 20px;
   z-index: 1000;
 }
 
-.control { /* h1 del titulo */
-  font-size: 3.9rem;
+.control {
+  font-size: 1.8rem;
   font-weight: bold;
-  text-align: center;
-  flex-grow: 1; /* Hace que el título ocupe el espacio disponible */
+  margin: 0;
 }
+
 
 /* Estilo del calendario */
 .react-calendar {
@@ -406,6 +415,7 @@ img {
   justify-content: center;
   font-size: 28px; /* Hace crecer el ícono si no usas size en FaUserCircle */
 }
+
 
 
 /* NUEVOS ESTILOS PARA EL MENÚ HAMBURGUESA (se añaden al final) */

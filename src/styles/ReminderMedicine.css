@@ -47,6 +47,12 @@
   padding: 0;
 }
 
+.milogo-medicine {
+  height: 165px;   /* tamaño reducido */
+  width: auto;    /* mantiene proporción */
+  margin-right: -80px; /* espacio entre logo y texto */
+}
+
 .frequency-section {
   margin: 20px 0;
 }
