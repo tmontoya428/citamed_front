@@ -11,9 +11,10 @@ const Home = () => {
   const [reminders, setReminders] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [nombreUsuario, setNombreUsuario] = useState(""); // 👈 Estado para el nombre
   const navigate = useNavigate();
 
-  // 🔐 Redirige al login si no hay token
+  // Redirige al login si no hay token
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -21,7 +22,13 @@ const Home = () => {
     }
   }, [navigate]);
 
-  // 🚫 Evita volver atrás con el navegador
+  // Recuperar nombre del usuario
+  useEffect(() => {
+    const nombre = localStorage.getItem("nombre");
+    if (nombre) setNombreUsuario(nombre);
+  }, []);
+
+  // Evita volver atrás con el navegador
   useEffect(() => {
     const preventBack = () => {
       window.history.pushState(null, "", window.location.href);
@@ -31,21 +38,19 @@ const Home = () => {
     return () => window.removeEventListener("popstate", preventBack);
   }, []);
 
-  // 📱 Detectar cambio de tamaño de pantalla
+  // Detectar cambio de tamaño de pantalla
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
-      // Cerrar menú al cambiar a desktop
       if (window.innerWidth > 768) {
         setIsMenuOpen(false);
       }
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 📥 Traer recordatorios desde el backend
+  // Traer recordatorios desde el backend
   useEffect(() => {
     const fetchReminders = async () => {
       try {
@@ -60,7 +65,7 @@ const Home = () => {
     fetchReminders();
   }, []);
 
-  // ✅ Helpers para comparar SOLO la fecha local (YYYY-MM-DD)
+  // Helpers para fechas
   const toLocalDateString = (date) => {
     const d = new Date(date);
     const y = d.getFullYear();
@@ -77,23 +82,22 @@ const Home = () => {
     return toLocalDateString(d);
   };
 
-  // 📌 Filtrar recordatorios por fecha seleccionada
   const selectedISO = toLocalDateString(selectedDate);
   const filteredReminders = reminders.filter((rem) => {
     const remISO = getReminderDate(rem);
     return remISO === selectedISO;
   });
 
-  // 🔑 Cerrar sesión
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("nombre");
     sessionStorage.clear();
     navigate("/login", { replace: true });
     window.location.reload();
   };
 
-  // 📱 Toggle del menú hamburguesa
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -108,15 +112,13 @@ const Home = () => {
           className="milogo" 
         />
         <h1 className="control"></h1>
-        
-        {/* Botón de menú hamburguesa (solo móviles) */}
+
         {isMobile && (
           <button className="hamburger-btn" onClick={toggleMenu}>
             {isMenuOpen ? <FaTimes /> : <FaBars />}
           </button>
         )}
-        
-        {/* Grupo de botones (escritorio) */}
+
         {!isMobile && (
           <div className="button-group desktop-buttons">
             <button className="button-profile" onClick={() => navigate("/profile")}>
@@ -128,8 +130,8 @@ const Home = () => {
           </div>
         )}
       </header>
-      
-      {/* Menú móvil (solo se muestra en móviles cuando está abierto) */}
+
+      {/* Menú móvil */}
       {isMobile && (
         <div className={`mobile-menu ${isMenuOpen ? 'mobile-menu-open' : ''}`}>
           <button 
@@ -147,8 +149,9 @@ const Home = () => {
         </div>
       )}
 
-      {/* Calendario */}
+      {/* Calendario con saludo */}
       <section className="bg-gray-100 p-4 my-6 rounded-lg text-center shadow-sm">
+        <h2 className="text-xl font-bold mb-4"> Hola {nombreUsuario.toUpperCase()}, Bienvenido a tu control medico</h2>
         <Calendar
           onChange={setSelectedDate}
           value={selectedDate}
@@ -156,7 +159,7 @@ const Home = () => {
         />
       </section>
 
-      {/* Recordatorios filtrados */}
+      {/* Recordatorios */}
       <section className="resumen-container mb-6">
         <h2 className="text-lg font-semibold mb-2">
           Recordatorios del {selectedDate.toLocaleDateString()}

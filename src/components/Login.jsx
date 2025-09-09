@@ -38,10 +38,12 @@ function Login() {
         } else {
           localStorage.removeItem("token");
           localStorage.removeItem("role");
+          localStorage.removeItem("nombre");
         }
       } catch (err) {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
+        localStorage.removeItem("nombre");
         console.warn("⚠️ Token inválido en el localStorage");
       }
     }
@@ -73,6 +75,13 @@ function Login() {
           localStorage.setItem("token", data.token);
           localStorage.setItem("role", data.role);
 
+          // 👇 Guardamos el nombre si viene en la respuesta
+          if (data.user?.nombre) {
+            localStorage.setItem("nombre", data.user.nombre);
+          } else {
+            console.warn("⚠️ El backend no envió el nombre del usuario");
+          }
+
           if (data.role === "admin") {
             navigate("/admin/dashboard", { replace: true });
           } else {
@@ -81,20 +90,17 @@ function Login() {
         } catch (err) {
           console.error("❌ Token mal formado:", err.message);
           setError("Error al procesar el token de sesión.");
-          // 🔄 Resetear captcha si el token falla
           captchaRef.current.reset();
           setCaptchaToken(null);
         }
       } else {
         setError(data.msg || "Credenciales incorrectas.");
-        // 🔄 Resetear captcha si credenciales incorrectas
         captchaRef.current.reset();
         setCaptchaToken(null);
       }
     } catch (err) {
       console.error("❌ Error de conexión:", err.message);
       setError("No se pudo conectar con el servidor.");
-      // 🔄 Resetear captcha si hay error de conexión
       captchaRef.current.reset();
       setCaptchaToken(null);
     }
@@ -155,7 +161,7 @@ function Login() {
               <ReCAPTCHA
                 sitekey={SITE_KEY}
                 onChange={(token) => setCaptchaToken(token)}
-                ref={captchaRef} // 👈 referencia para resetear
+                ref={captchaRef}
                 className="captcha-box"
               />
             </div>
