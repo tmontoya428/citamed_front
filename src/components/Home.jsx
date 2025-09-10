@@ -11,7 +11,7 @@ const Home = () => {
   const [reminders, setReminders] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [nombreUsuario, setNombreUsuario] = useState(""); // 👈 Estado para el nombre
+  const [nombreUsuario, setNombreUsuario] = useState(""); 
   const navigate = useNavigate();
 
   // Redirige al login si no hay token
@@ -121,8 +121,13 @@ const Home = () => {
 
         {!isMobile && (
           <div className="button-group desktop-buttons">
-            <button className="button-profile" onClick={() => navigate("/profile")}>
-              <FaUserCircle size={24} />
+            <button 
+              className="button-profile flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold"
+              onClick={() => navigate("/profile")}
+            >
+              {nombreUsuario
+                ? nombreUsuario.charAt(0).toUpperCase()
+                : <FaUserCircle size={20} />}
             </button>
             <button className="button-close" onClick={handleLogout}>
               <FaSignOutAlt size={28} />
@@ -135,9 +140,12 @@ const Home = () => {
       {isMobile && (
         <div className={`mobile-menu ${isMenuOpen ? 'mobile-menu-open' : ''}`}>
           <button 
-            className="mobile-menu-btn" 
+            className="mobile-menu-btn flex items-center gap-2"
             onClick={() => { navigate("/profile"); setIsMenuOpen(false); }}
           >
+            <span className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+              {nombreUsuario ? nombreUsuario.charAt(0).toUpperCase() : "?"}
+            </span>
             Mi Perfil
           </button>
           <button 
