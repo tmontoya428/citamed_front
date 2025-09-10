@@ -96,11 +96,15 @@ function ReminderMedicine() {
               onChange={(e)=>setUnidad(e.target.value)}
               required
             >
-              <option value="Unidades">Unidades</option>
-              <option value="Miligramos">Miligramos</option>
-              <option value="Mililitros">Mililitros</option>
-              <option value="Litros">Litros</option>
+              <option value="Unidades">Unidades (tabletas, cápsulas)</option>
+              <option value="Miligramos">Miligramos (mg)</option>
+              <option value="Gramos">Gramos (g)</option>
+              <option value="Mililitros">Mililitros (ml)</option>
+              <option value="Litros">Litros (l)</option>
+              <option value="Gotas">Gotas</option>
+              <option value="Sobres">Sobres</option>
             </select>
+
           </div>
 
           <div className="reminder-row">
