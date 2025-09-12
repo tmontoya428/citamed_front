@@ -11,21 +11,18 @@ const Home = () => {
   const [reminders, setReminders] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [userName, setUserName] = useState(""); // 👤 nombre completo del usuario
   const navigate = useNavigate();
 
   // 🔐 Redirige al login si no hay token
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login", { replace: true });
-    }
+    if (!token) navigate("/login", { replace: true });
   }, [navigate]);
 
-  // 🚫 Evita volver atrás con el navegador
+  // 🚫 Evita volver atrás
   useEffect(() => {
-    const preventBack = () => {
-      window.history.pushState(null, "", window.location.href);
-    };
+    const preventBack = () => window.history.pushState(null, "", window.location.href);
     window.history.pushState(null, "", window.location.href);
     window.addEventListener("popstate", preventBack);
     return () => window.removeEventListener("popstate", preventBack);
@@ -35,17 +32,13 @@ const Home = () => {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
-      // Cerrar menú al cambiar a desktop
-      if (window.innerWidth > 768) {
-        setIsMenuOpen(false);
-      }
+      if (window.innerWidth > 768) setIsMenuOpen(false);
     };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 📥 Traer recordatorios desde el backend
+  // 📥 Traer recordatorios
   useEffect(() => {
     const fetchReminders = async () => {
       try {
@@ -60,7 +53,24 @@ const Home = () => {
     fetchReminders();
   }, []);
 
-  // ✅ Helpers para comparar SOLO la fecha local (YYYY-MM-DD)
+  // 📥 Traer info del usuario
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/infoUser", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        if (res.data?.fullName) setUserName(res.data.fullName);
+        else setUserName("Paciente");
+      } catch (err) {
+        console.error("❌ Error al traer info del usuario:", err);
+        setUserName("Paciente");
+      }
+    };
+    fetchUserInfo();
+  }, []);
+
+  // ✅ Helpers
   const toLocalDateString = (date) => {
     const d = new Date(date);
     const y = d.getFullYear();
@@ -77,14 +87,10 @@ const Home = () => {
     return toLocalDateString(d);
   };
 
-  // 📌 Filtrar recordatorios por fecha seleccionada
   const selectedISO = toLocalDateString(selectedDate);
-  const filteredReminders = reminders.filter((rem) => {
-    const remISO = getReminderDate(rem);
-    return remISO === selectedISO;
-  });
+  const filteredReminders = reminders.filter((rem) => getReminderDate(rem) === selectedISO);
 
-  // 🔑 Cerrar sesión
+  // 🔑 Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -93,25 +99,23 @@ const Home = () => {
     window.location.reload();
   };
 
-  // 📱 Toggle del menú hamburguesa
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  // 📱 Toggle menú hamburguesa
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Encabezado */}
       <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md main-header">
-        <h1 className="text-xl font-bold control">Mi Control Médico</h1>
-        
-        {/* Botón de menú hamburguesa (solo móviles) */}
+        <h1 className="text-xl font-bold control">
+          Bienvenida {userName || "Paciente"} a tu control médico
+        </h1>
+
         {isMobile && (
           <button className="hamburger-btn" onClick={toggleMenu}>
             {isMenuOpen ? <FaTimes /> : <FaBars />}
           </button>
         )}
-        
-        {/* Grupo de botones (escritorio) */}
+
         {!isMobile && (
           <div className="button-group desktop-buttons">
             <button className="button-profile" onClick={() => navigate("/profile")}>
@@ -123,20 +127,13 @@ const Home = () => {
           </div>
         )}
       </header>
-      
-      {/* Menú móvil (solo se muestra en móviles cuando está abierto) */}
+
       {isMobile && (
-        <div className={`mobile-menu ${isMenuOpen ? 'mobile-menu-open' : ''}`}>
-          <button 
-            className="mobile-menu-btn" 
-            onClick={() => { navigate("/profile"); setIsMenuOpen(false); }}
-          >
+        <div className={`mobile-menu ${isMenuOpen ? "mobile-menu-open" : ""}`}>
+          <button className="mobile-menu-btn" onClick={() => { navigate("/profile"); setIsMenuOpen(false); }}>
             Mi Perfil
           </button>
-          <button 
-            className="mobile-menu-btn" 
-            onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-          >
+          <button className="mobile-menu-btn" onClick={() => { handleLogout(); setIsMenuOpen(false); }}>
             Cerrar Sesión
           </button>
         </div>
@@ -144,14 +141,10 @@ const Home = () => {
 
       {/* Calendario */}
       <section className="bg-gray-100 p-4 my-6 rounded-lg text-center shadow-sm">
-        <Calendar
-          onChange={setSelectedDate}
-          value={selectedDate}
-          className="mx-auto calendar-custom"
-        />
+        <Calendar onChange={setSelectedDate} value={selectedDate} className="mx-auto calendar-custom" />
       </section>
 
-      {/* Recordatorios filtrados */}
+      {/* Recordatorios */}
       <section className="resumen-container mb-6">
         <h2 className="text-lg font-semibold mb-2">
           Recordatorios del {selectedDate.toLocaleDateString()}
@@ -159,21 +152,14 @@ const Home = () => {
         {filteredReminders.length > 0 ? (
           <ul className="space-y-2">
             {filteredReminders.map((rem) => (
-              <li
-                key={rem._id}
-                className="bg-white p-3 rounded shadow flex justify-between items-center"
-              >
+              <li key={rem._id} className="bg-white p-3 rounded shadow flex justify-between items-center">
                 <div>
                   <h3 className="font-bold">{rem.titulo}</h3>
-                  <p className="text-sm text-gray-600">
-                    Descripción: {rem.descripcion}
-                  </p>
-                  <span className="text-xs text-blue-500">
-                    Frecuencia: {rem.frecuencia}
-                  </span>
+                  <p className="text-sm text-gray-600">Descripción: {rem.descripcion}</p>
+                  <span className="text-xs text-blue-500">Frecuencia: {rem.frecuencia}</span>
                 </div>
                 <span className="text-sm font-semibold text-gray-800">
-                  ⏰{Array.isArray(rem.horarios) ? rem.horarios.join(", ") : "—"}
+                  ⏰ {Array.isArray(rem.horarios) ? rem.horarios.join(", ") : "—"}
                 </span>
               </li>
             ))}
@@ -187,37 +173,22 @@ const Home = () => {
       <section>
         <h2 className="titulo-h2 mb-4">Herramientas y Utilidades</h2>
         <div className="grid grid-cols-2 gap-4">
-          <div
-            className="bg-gray-200 hover:bg-gray-300 transition p-4 rounded-lg text-center cursor-pointer shadow"
-            onClick={() => navigate("/reminder")}
-          >
+          <div className="bg-gray-200 hover:bg-gray-300 transition p-4 rounded-lg text-center cursor-pointer shadow" onClick={() => navigate("/reminder")}>
             <FaBell className="text-3xl mx-auto text-blue-600 bell-icon" />
             <h3 className="font-bold mt-2">Recordatorios</h3>
-            <p className="text-sm text-gray-600">
-              Para medicación, pastillas, etc.
-            </p>
+            <p className="text-sm text-gray-600">Para medicación, pastillas, etc.</p>
           </div>
-
-          <div
-            className="bg-gray-200 hover:bg-gray-300 transition p-4 rounded-lg text-center cursor-pointer shadow"
-            onClick={() => navigate("/follow-up")}
-          >
+          <div className="bg-gray-200 hover:bg-gray-300 transition p-4 rounded-lg text-center cursor-pointer shadow" onClick={() => navigate("/follow-up")}>
             <FaFileAlt className="text-3xl mx-auto text-green-600" />
             <h3 className="font-bold mt-2">Seguimiento a paciente</h3>
-            <p className="text-sm text-gray-600">
-              Cumplimiento de tratamiento
-            </p>
+            <p className="text-sm text-gray-600">Cumplimiento de tratamiento</p>
           </div>
         </div>
       </section>
 
-      {/* Imagen ilustrativa */}
+      {/* Imagen */}
       <div className="text-center mt-8">
-        <img
-          src="/public/citas.avif"
-          alt="Seguimiento y cumplimiento"
-          className="img mx-auto max-w-xs sm:max-w-sm rounded-lg shadow"
-        />
+        <img src="/public/citas.avif" alt="Seguimiento y cumplimiento" className="img mx-auto max-w-xs sm:max-w-sm rounded-lg shadow" />
       </div>
     </div>
   );
