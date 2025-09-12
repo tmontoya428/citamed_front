@@ -8,7 +8,6 @@ const Remindercontrol = () => {
   const [titulo, setTitulo] = useState('');
   const [fecha, setFecha] = useState(''); // ahora incluye hora
   const [descripcion, setDescripcion] = useState('');
-  const [frecuencia, setFrecuencia] = useState('');
   const [loading, setLoading] = useState(false);
 
   const irAReminder = () => {
@@ -17,11 +16,6 @@ const Remindercontrol = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!frecuencia) {
-      alert('Por favor selecciona una frecuencia');
-      return;
-    }
 
     if (!fecha) {
       alert('Debes seleccionar fecha y hora del control');
@@ -35,12 +29,16 @@ const Remindercontrol = () => {
       return;
     }
 
+    // Calcular la fecha del control y una hora antes
+    const fechaControl = new Date(fecha);
+    const fechaRecordatorio = new Date(fechaControl.getTime() - 60 * 60 * 1000);
+
     const reminder = { 
       tipo: "control", 
       titulo,
-      fecha,  // fecha + hora
-      descripcion, 
-      frecuencia
+      fecha: fechaControl,         // fecha del control
+      fechaRecordatorio,           // notificación 1 hora antes
+      descripcion
     };
 
     try {
@@ -61,7 +59,6 @@ const Remindercontrol = () => {
         console.log("✅ Recordatorio creado:", data);
         setTitulo('');
         setDescripcion('');
-        setFrecuencia('');
         setFecha('');
         navigate("/reminder-created");
       } else {
@@ -81,7 +78,11 @@ const Remindercontrol = () => {
         <button className="nav-button" onClick={irAReminder}>
           <FaArrowLeft />
         </button>
-        <h1>CITAMED</h1>
+                <img 
+          src="/public/Logo citamed.png" 
+          alt="Seguimiento y cumplimiento" 
+          className="milogo-medicine" 
+        />
       </nav>
 
       <main>
@@ -117,21 +118,9 @@ const Remindercontrol = () => {
               required
             />
 
-            <p className="remindercontrol-frecuencia-label">Frecuencia</p>
-            <div className="remindercontrol-frecuencia-buttons">
-              {['Diaria', 'Semanal', 'Personalizada'].map((freq) => (
-                <button
-                  type="button"
-                  key={freq}
-                  className={`remindercontrol-frecuencia-btn ${frecuencia === freq ? 'selected' : ''}`}
-                  onClick={() => setFrecuencia(freq)}
-                >
-                  {freq}
-                </button>
-              ))}
-            </div>
-
-            <p className="remindercontrol-info">❗ La notificación se enviará según la fecha y hora seleccionadas</p>
+            <p className="remindercontrol-info">
+              ❗ El recordatorio se enviará **1 hora antes** de la cita programada
+            </p>
 
             <button
               type="submit"

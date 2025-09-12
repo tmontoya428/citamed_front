@@ -11,16 +11,22 @@ const Home = () => {
   const [reminders, setReminders] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [userName, setUserName] = useState(""); // 👤 nombre completo del usuario
+  const [nombreUsuario, setNombreUsuario] = useState(""); 
   const navigate = useNavigate();
 
-  // 🔐 Redirige al login si no hay token
+  // Redirige al login si no hay token
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/login", { replace: true });
   }, [navigate]);
 
-  // 🚫 Evita volver atrás
+  // Recuperar nombre del usuario
+  useEffect(() => {
+    const nombre = localStorage.getItem("nombre");
+    if (nombre) setNombreUsuario(nombre);
+  }, []);
+
+  // Evita volver atrás con el navegador
   useEffect(() => {
     const preventBack = () => window.history.pushState(null, "", window.location.href);
     window.history.pushState(null, "", window.location.href);
@@ -28,17 +34,19 @@ const Home = () => {
     return () => window.removeEventListener("popstate", preventBack);
   }, []);
 
-  // 📱 Detectar cambio de tamaño de pantalla
+  // Detectar cambio de tamaño de pantalla
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
-      if (window.innerWidth > 768) setIsMenuOpen(false);
+      if (window.innerWidth > 768) {
+        setIsMenuOpen(false);
+      }
     };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 📥 Traer recordatorios
+  // Traer recordatorios desde el backend
   useEffect(() => {
     const fetchReminders = async () => {
       try {
@@ -53,24 +61,7 @@ const Home = () => {
     fetchReminders();
   }, []);
 
-  // 📥 Traer info del usuario
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/infoUser", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
-        if (res.data?.fullName) setUserName(res.data.fullName);
-        else setUserName("Paciente");
-      } catch (err) {
-        console.error("❌ Error al traer info del usuario:", err);
-        setUserName("Paciente");
-      }
-    };
-    fetchUserInfo();
-  }, []);
-
-  // ✅ Helpers
+  // Helpers para fechas
   const toLocalDateString = (date) => {
     const d = new Date(date);
     const y = d.getFullYear();
@@ -90,25 +81,30 @@ const Home = () => {
   const selectedISO = toLocalDateString(selectedDate);
   const filteredReminders = reminders.filter((rem) => getReminderDate(rem) === selectedISO);
 
-  // 🔑 Logout
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("nombre");
     sessionStorage.clear();
     navigate("/login", { replace: true });
     window.location.reload();
   };
 
-  // 📱 Toggle menú hamburguesa
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Encabezado */}
-      <header className="flex justify-between items-center bg-blue-500 text-white p-4 rounded-lg shadow-md main-header">
-        <h1 className="text-xl font-bold control">
-          Bienvenida {userName || "Paciente"} a tu control médico
-        </h1>
+      <header className="main-header">
+        <img 
+          src="/public/Logo citamed.png" 
+          alt="Seguimiento y cumplimiento" 
+          className="milogo" 
+        />
+        <h1 className="control"></h1>
 
         {isMobile && (
           <button className="hamburger-btn" onClick={toggleMenu}>
@@ -118,8 +114,13 @@ const Home = () => {
 
         {!isMobile && (
           <div className="button-group desktop-buttons">
-            <button className="button-profile" onClick={() => navigate("/profile")}>
-              <FaUserCircle size={24} />
+            <button 
+              className="button-profile flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold"
+              onClick={() => navigate("/profile")}
+            >
+              {nombreUsuario
+                ? nombreUsuario.charAt(0).toUpperCase()
+                : <FaUserCircle size={20} />}
             </button>
             <button className="button-close" onClick={handleLogout}>
               <FaSignOutAlt size={28} />
@@ -128,9 +129,16 @@ const Home = () => {
         )}
       </header>
 
+      {/* Menú móvil */}
       {isMobile && (
-        <div className={`mobile-menu ${isMenuOpen ? "mobile-menu-open" : ""}`}>
-          <button className="mobile-menu-btn" onClick={() => { navigate("/profile"); setIsMenuOpen(false); }}>
+        <div className={`mobile-menu ${isMenuOpen ? 'mobile-menu-open' : ''}`}>
+          <button 
+            className="mobile-menu-btn flex items-center gap-2"
+            onClick={() => { navigate("/profile"); setIsMenuOpen(false); }}
+          >
+            <span className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+              {nombreUsuario ? nombreUsuario.charAt(0).toUpperCase() : "?"}
+            </span>
             Mi Perfil
           </button>
           <button className="mobile-menu-btn" onClick={() => { handleLogout(); setIsMenuOpen(false); }}>
@@ -139,9 +147,14 @@ const Home = () => {
         </div>
       )}
 
-      {/* Calendario */}
+      {/* Calendario con saludo */}
       <section className="bg-gray-100 p-4 my-6 rounded-lg text-center shadow-sm">
-        <Calendar onChange={setSelectedDate} value={selectedDate} className="mx-auto calendar-custom" />
+        <h2 className="text-xl font-bold mb-4"> Hola {nombreUsuario.toUpperCase()}, Bienvenido a tu control medico</h2>
+        <Calendar
+          onChange={setSelectedDate}
+          value={selectedDate}
+          className="mx-auto calendar-custom"
+        />
       </section>
 
       {/* Recordatorios */}
